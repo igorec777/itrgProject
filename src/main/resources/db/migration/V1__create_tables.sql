@@ -1,6 +1,6 @@
 create table person
 (
-    Id       int auto_increment,
+    id       bigint auto_increment,
     name     char not null,
     surname  char not null,
     login    char not null,
@@ -8,23 +8,23 @@ create table person
 );
 
 create unique index USER_ID_UINDEX
-    on person (Id);
+    on person (id);
 
 create unique index USER_LOGIN_UINDEX
     on person (login);
 
 alter table person
     add constraint USER_PK
-        primary key (Id);
+        primary key (id);
 
 create table role
 (
-    Id   int auto_increment,
+    id   bigint auto_increment,
     name char not null
 );
 
 create unique index ROLE_ID_UINDEX
-    on role (Id);
+    on role (id);
 
 create unique index ROLE_NAME_UINDEX
     on role (name);
@@ -35,8 +35,8 @@ alter table role
 
 create table person_has_role
 (
-    personId int not null,
-    roleId   int not null
+    personId bigint not null,
+    roleId   bigint not null
 
 );
 
@@ -45,20 +45,20 @@ alter table person_has_role
         primary key (personId, roleId);
 
 alter table person_has_role
-    add foreign key (personId) references person (Id);
+    add foreign key (personId) references person (id);
 
 alter table person_has_role
-    add foreign key (roleId) references role (Id);
+    add foreign key (roleId) references role (id);
 
 create table service
 (
-    Id    int auto_increment,
+    id    bigint auto_increment,
     name  char   not null,
     price double not null
 );
 
 create unique index SERVICE_ID_UINDEX
-    on service (Id);
+    on service (id);
 
 create unique index SERVICE_NAME_UINDEX
     on service (name);
@@ -69,29 +69,29 @@ alter table service
 
 create table record
 (
-    Id        int auto_increment,
+    id        bigint auto_increment,
     date      date not null,
-    startTime time not null,
-    endTime   time,
-    clientId  int  not null,
-    workerId  int  not null,
-    serviceId int  not null
+    startTime timestamp not null,
+    endTime   timestamp not null,
+    clientId  bigint  not null,
+    workerId  bigint  not null,
+    serviceId bigint  not null
 );
 
 create unique index RECORD_ID_UINDEX
-    on record (Id);
+    on record (id);
 
 alter table record
     add constraint RECORD_PK
-        primary key (Id);
+        primary key (id);
 
 alter table record
-    add foreign key (clientId) references person (Id);
+    add foreign key (clientId) references person (id);
 
 alter table record
-    add foreign key (workerId) references person (Id);
+    add foreign key (workerId) references person (id);
 
 alter table record
-    add foreign key (serviceId) references service (Id);
+    add foreign key (serviceId) references service (id);
 
 COMMIT;
