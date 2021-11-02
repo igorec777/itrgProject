@@ -2,7 +2,6 @@ package repository.hibernate;
 
 import entity.hibernate.Record;
 import org.junit.jupiter.api.Test;
-import repository.hibernate.impl.RecordRepositoryImpl;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -13,12 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RecordRepositoryImplTest extends BaseRepositoryTest {
-
-    private final RecordRepository recordRepository;
-
-    RecordRepositoryImplTest() {
-        recordRepository = new RecordRepositoryImpl(getSessionFactory());
-    }
 
     @Test
     void create_validData_shouldReturnCreatedRecord() {

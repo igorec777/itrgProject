@@ -3,7 +3,6 @@ package repository.hibernate;
 import entity.hibernate.BaseEntity;
 import entity.hibernate.Person;
 import org.junit.jupiter.api.Test;
-import repository.hibernate.impl.PersonRepositoryImpl;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -14,18 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PersonRepositoryImplTest extends BaseRepositoryTest {
 
-    private final PersonRepository personRepository;
-
     private final Set<Person> testPeople;
 
     PersonRepositoryImplTest() {
-        personRepository = new PersonRepositoryImpl(getSessionFactory());
-
         testPeople = new TreeSet<>(Comparator.comparing(BaseEntity::getId));
         testPeople.add(new Person(1L, "Name1", "Surname1", "Login1", "1111"));
         testPeople.add(new Person(2L, "Name2", "Surname2", "Login2", "2222"));
         testPeople.add(new Person(3L, "Name3", "Surname3", "Login3", "3333"));
-
     }
 
     @Test

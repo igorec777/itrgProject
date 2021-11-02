@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+
 public class HibernateService {
 
     private static final SessionFactory sessionFactory;
@@ -11,7 +12,7 @@ public class HibernateService {
     static {
         try {
             sessionFactory = new Configuration()
-                    .configure().buildSessionFactory();
+                    .configure("hibernate.cfg.xml").buildSessionFactory();
         } catch (HibernateException ex) {
             throw new ExceptionInInitializerError("Failed to connect hibernate" + ex);
         }

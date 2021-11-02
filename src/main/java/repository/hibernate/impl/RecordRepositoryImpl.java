@@ -6,15 +6,18 @@ import entity.hibernate.Service;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import repository.hibernate.RecordRepository;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@org.springframework.stereotype.Service
 public class RecordRepositoryImpl implements RecordRepository {
 
     private final SessionFactory sessionFactory;
 
+    @Autowired
     public RecordRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

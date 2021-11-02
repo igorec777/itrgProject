@@ -1,9 +1,11 @@
 package repository.hibernate;
 
 import entity.hibernate.Person;
+import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+@Repository
 public interface PersonRepository {
 
     Person create(Person person);

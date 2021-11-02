@@ -1,12 +1,19 @@
 package connectorService;
 
 import org.flywaydb.core.Flyway;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import static properties.DataSourceParams.*;
 
+@Component
 public class FlywayService {
 
-    private Flyway flyway;
+    private final Flyway flyway;
+
+    @Autowired
+    FlywayService(Flyway flyway) {
+        this.flyway = flyway;
+    }
 
     public void migrate() {
         flyway.migrate();
@@ -14,16 +21,5 @@ public class FlywayService {
 
     public void clean() {
         flyway.clean();
-    }
-
-    public FlywayService() {
-        init();
-    }
-
-    private void init() {
-        flyway = Flyway.configure()
-                .dataSource(URL, USER, PASSWORD)
-                .locations(MIGRATIONS_LOCATION)
-                .load();
     }
 }

@@ -4,16 +4,20 @@ import entity.hibernate.Role;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import repository.hibernate.RoleRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class RoleRepositoryImpl implements RoleRepository {
 
     private final SessionFactory sessionFactory;
 
+    @Autowired
     public RoleRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

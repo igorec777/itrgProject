@@ -3,22 +3,18 @@ package repository.hibernate;
 import entity.hibernate.BaseEntity;
 import entity.hibernate.Role;
 import org.junit.jupiter.api.Test;
-import repository.hibernate.impl.RoleRepositoryImpl;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 class RoleRepositoryImplTest extends BaseRepositoryTest{
-
-    private final RoleRepository roleRepository;
 
     private final Set<Role> testRoles;
 
     RoleRepositoryImplTest() {
-        roleRepository = new RoleRepositoryImpl(getSessionFactory());
-
         testRoles = new TreeSet<>(Comparator.comparing(BaseEntity::getId));
         testRoles.add(new Role(1L,"Admin"));
         testRoles.add(new Role(2L,"Worker"));

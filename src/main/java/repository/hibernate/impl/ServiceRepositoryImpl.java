@@ -4,16 +4,18 @@ import entity.hibernate.Service;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import repository.hibernate.ServiceRepository;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@org.springframework.stereotype.Service
 public class ServiceRepositoryImpl implements ServiceRepository {
 
     private final SessionFactory sessionFactory;
 
+    @Autowired
     public ServiceRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

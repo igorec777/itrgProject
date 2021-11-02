@@ -1,9 +1,11 @@
 package repository.hibernate;
 
 import entity.hibernate.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+@Repository
 public interface ServiceRepository {
     Set<Service> readAll();
 

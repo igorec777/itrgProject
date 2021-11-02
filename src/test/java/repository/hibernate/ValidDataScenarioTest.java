@@ -5,10 +5,6 @@ import entity.hibernate.Record;
 import entity.hibernate.Role;
 import entity.hibernate.Service;
 import org.junit.jupiter.api.Test;
-import repository.hibernate.impl.PersonRepositoryImpl;
-import repository.hibernate.impl.RecordRepositoryImpl;
-import repository.hibernate.impl.RoleRepositoryImpl;
-import repository.hibernate.impl.ServiceRepositoryImpl;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -17,18 +13,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ValidDataScenarioTest extends BaseRepositoryTest {
-
-    private final PersonRepository personRepository;
-    private final RoleRepository roleRepository;
-    private final RecordRepository recordRepository;
-    private final ServiceRepository serviceRepository;
-
-    ValidDataScenarioTest() {
-        personRepository = new PersonRepositoryImpl(getSessionFactory());
-        roleRepository = new RoleRepositoryImpl(getSessionFactory());
-        recordRepository = new RecordRepositoryImpl(getSessionFactory());
-        serviceRepository = new ServiceRepositoryImpl(getSessionFactory());
-    }
 
     @Test
     void scenario_validData_shouldPass() {

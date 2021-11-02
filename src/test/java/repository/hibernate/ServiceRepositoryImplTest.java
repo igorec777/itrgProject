@@ -2,18 +2,11 @@ package repository.hibernate;
 
 import entity.hibernate.Service;
 import org.junit.jupiter.api.Test;
-import repository.hibernate.impl.ServiceRepositoryImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ServiceRepositoryImplTest extends BaseRepositoryTest{
-
-    ServiceRepository serviceRepository;
-
-    ServiceRepositoryImplTest() {
-        serviceRepository = new ServiceRepositoryImpl(getSessionFactory());
-    }
 
     @Test
     void readAll_shouldReturnSetOfServices() {
