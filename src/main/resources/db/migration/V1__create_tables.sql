@@ -70,7 +70,6 @@ alter table service
 create table record
 (
     id        bigint auto_increment,
-    date      date not null,
     startTime timestamp not null,
     endTime   timestamp not null,
     clientId  bigint  not null,
