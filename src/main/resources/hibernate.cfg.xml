@@ -17,7 +17,7 @@
         <mapping class="entity.Person"/>
         <mapping class="entity.Role"/>
         <mapping class="entity.Service"/>
-<!--        <mapping class="entity.Activity"/>-->
+        <mapping class="entity.Record"/>
 
     </session-factory>
 </hibernate-configuration>

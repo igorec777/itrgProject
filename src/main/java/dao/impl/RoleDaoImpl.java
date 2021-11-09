@@ -45,10 +45,10 @@ public class RoleDaoImpl implements RoleDao {
             session.getTransaction().commit();
         } catch (ObjectNotFoundException ex) {
             session.getTransaction().rollback();
-            System.out.println(Role.class.getSimpleName() + " with id:" + id + " not found");
-            throw new RowNotFoundException(Role.class, id);
-        }
-        finally {
+            String exMessage = Role.class.getSimpleName() + " with id:" + id + " not found";
+            System.out.println("Log: " + Role.class.getSimpleName() + " with id:" + id + " not found");
+            throw new RowNotFoundException(exMessage);
+        } finally {
             sessionUtil.closeSessionIfOpen();
         }
         return existRole;
@@ -66,7 +66,6 @@ public class RoleDaoImpl implements RoleDao {
         return roles;
     }
 
-    //TODO person_has_role also deleted, fix that
     @Override
     public void update(Role role) {
         Session session = sessionUtil.getNewSession();

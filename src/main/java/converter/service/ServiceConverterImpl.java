@@ -1,9 +1,7 @@
 package converter.service;
 
 import converter.BaseConverter;
-import dto.role.RoleDto;
 import dto.service.ServiceDto;
-import entity.Role;
 import entity.Service;
 import org.springframework.stereotype.Component;
 

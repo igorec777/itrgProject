@@ -9,8 +9,9 @@ import org.springframework.context.annotation.*;
 
 @PropertySource(value = "classpath:application.properties")
 @ComponentScans({@ComponentScan({"connectorService"}),
-                @ComponentScan({"dao", "dao.impl", "service", "service.impl"}),
-                @ComponentScan({"converter"})})
+        @ComponentScan({"dao", "dao.impl"}),
+        @ComponentScan({"service", "service.impl"}),
+        @ComponentScan({"converter"})})
 @Configuration
 public class BaseConfig {
 
@@ -29,9 +30,4 @@ public class BaseConfig {
     SessionFactory sessionFactory() {
         return HibernateUtil.getSessionFactory();
     }
-
-//    @Bean
-//    public ModelMapper getMapper() {
-//        return new ModelMapper();
-//    }
 }

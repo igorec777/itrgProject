@@ -1,9 +1,13 @@
 package converter;
 
 
-public interface BaseConverter<A, B>  {
+public interface BaseConverter<A, B> {
 
-     B fromDto(A dto);
+    default B fromDto(A dto) {
+        return null;
+    }
 
-    A toDto(B entity);
+    default A toDto(B entity) {
+        return null;
+    }
 }

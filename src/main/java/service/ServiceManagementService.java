@@ -1,9 +1,7 @@
 package service;
 
-import dao.ServiceDao;
-import dto.role.RoleDto;
 import dto.service.ServiceDto;
-import exceptions.ConstraintViolationException;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
 
 import java.util.Set;
@@ -16,6 +14,5 @@ public interface ServiceManagementService {
 
     ServiceDto create(ServiceDto serviceDto) throws RowNotFoundException;
 
-    void deleteById(Long id) throws RowNotFoundException, ConstraintViolationException;
-
+    void deleteById(Long id) throws RowNotFoundException, RestrictionViolationException;
 }

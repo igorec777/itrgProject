@@ -11,13 +11,6 @@ import java.util.stream.Collectors;
 @Component
 public class ReadPersonConverterImpl implements BaseConverter<ReadPersonDto, Person> {
 
-
-
-    @Override
-    public Person fromDto(ReadPersonDto dto) {
-        return null;
-    }
-
     @Override
     public ReadPersonDto toDto(Person entity) {
         String roles = entity.getRoles()

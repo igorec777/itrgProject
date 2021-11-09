@@ -28,15 +28,15 @@ public class PersonDaoImpl implements PersonDao {
     public Person findById(Long id) throws RowNotFoundException {
         Session session = sessionUtil.getNewSession();
         session.beginTransaction();
-        Person existPerson = session.load(Person.class,id);
+        Person existPerson = session.load(Person.class, id);
         try {
             Hibernate.initialize(existPerson.getRoles());
         } catch (ObjectNotFoundException ex) {
             session.getTransaction().rollback();
-            System.out.println(Person.class.getSimpleName() + " with id:" + id + " not found");
-            throw new RowNotFoundException(Person.class, id);
-        }
-        finally {
+            String exMessage = Person.class.getSimpleName() + " with id:" + id + " not found";
+            System.out.println("Log: " + Person.class.getSimpleName() + " with id:" + id + " not found");
+            throw new RowNotFoundException(exMessage);
+        } finally {
             sessionUtil.closeSessionIfOpen();
         }
         return existPerson;
@@ -75,7 +75,6 @@ public class PersonDaoImpl implements PersonDao {
         sessionUtil.closeSessionIfOpen();
     }
 
-    //TODO fix
     @Override
     public void update(Person person) {
         Session session = sessionUtil.getNewSession();

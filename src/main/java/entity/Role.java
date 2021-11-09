@@ -43,25 +43,6 @@ public class Role extends BaseEntity<Long> {
         return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                //", people=" + getPeopleStr() +
                 '}';
     }
-
-//    private String getPeopleStr() {
-//        if (people == null) {
-//            return "null";
-//        } else if (people.isEmpty()) {
-//            return "[]";
-//        } else {
-//            StringBuilder sb = new StringBuilder();
-//            people.forEach(p -> sb.append("Person{" +
-//                    "id=" + p.getId() +
-//                    ", name='" + p.getName() + '\'' +
-//                    ", surname='" + p.getSurname() + '\'' +
-//                    ", login='" + p.getLogin() + '\'' +
-//                    ", password='" + p.getPassword() + '\'' +
-//                    '}'));
-//            return sb.toString();
-//        }
-//    }
 }

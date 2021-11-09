@@ -1,10 +1,12 @@
 package service.impl;
 
 import converter.service.ServiceConverterImpl;
+import dao.RecordDao;
 import dao.ServiceDao;
 import dto.service.ServiceDto;
+import entity.Record;
 import entity.Service;
-import exceptions.ConstraintViolationException;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import service.ServiceManagementService;
@@ -16,11 +18,13 @@ import java.util.stream.Collectors;
 public class ServiceManagementServiceImpl implements ServiceManagementService {
 
     private final ServiceDao serviceDao;
+    private final RecordDao recordDao;
     private final ServiceConverterImpl serviceConverter;
 
     @Autowired
-    ServiceManagementServiceImpl(ServiceDao serviceDao, ServiceConverterImpl serviceConverter) {
+    ServiceManagementServiceImpl(ServiceDao serviceDao, RecordDao recordDao, ServiceConverterImpl serviceConverter) {
         this.serviceDao = serviceDao;
+        this.recordDao = recordDao;
         this.serviceConverter = serviceConverter;
     }
 
@@ -42,14 +46,18 @@ public class ServiceManagementServiceImpl implements ServiceManagementService {
     }
 
     @Override
-    public void deleteById(Long id) throws RowNotFoundException, ConstraintViolationException {
-//        Service existService = serviceDao.findById(id);
-//        Set<Service> existServices = serviceDao.findAll();
-//        if (isAnyPersonHasRole(existPeople, id)) {
-//            String msg = "Cannot delete role with id: " + id + ". Some person references to this role";
-//            System.out.println(msg);
-//            throw new ConstraintViolationException(msg);
-//        }
-//        roleDao.delete(existRole);
+    public void deleteById(Long id) throws RowNotFoundException, RestrictionViolationException {
+        Service existService = serviceDao.findById(id);
+        Set<Record> existRecords = recordDao.findAll();
+        boolean isAnyRecordHasService = existRecords.stream()
+                .anyMatch(r -> r.getService().getId().equals(id));
+
+        if (isAnyRecordHasService) {
+            String exMessage = "Cannot delete " + Service.class.getSimpleName() + " with id: " + id + " because" +
+                    " some " + Record.class.getSimpleName() + "(s) references to this " + Service.class.getSimpleName();
+            System.out.println("Log: " + exMessage);
+            throw new RestrictionViolationException(exMessage);
+        }
+        serviceDao.delete(existService);
     }
 }

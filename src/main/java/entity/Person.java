@@ -1,7 +1,6 @@
 package entity;
 
 import lombok.*;
-import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,7 +10,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-//@SelectBeforeUpdate
 @Table(name = "person")
 public class Person extends BaseEntity<Long> {
 
@@ -34,12 +32,6 @@ public class Person extends BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "roleId")
     )
     Set<Role> roles = new HashSet<>();
-
-//    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE)
-//    private Set<Record> clientRecords;
-//
-//    @OneToMany(mappedBy = "worker", cascade = CascadeType.REMOVE)
-//    private Set<Record> workerRecords;
 
     public Person(String name, String surname, String login, String password) {
         this.name = name;

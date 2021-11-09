@@ -23,9 +23,6 @@ public class Service extends BaseEntity<Long> {
     @Column(name = "price", nullable = false)
     private Double price;
 
-//    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
-//    private Set<Record> records = new HashSet<>();
-
     @Builder
     public Service(Long id, String name, Double price) {
         this.id = id;

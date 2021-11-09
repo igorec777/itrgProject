@@ -20,7 +20,6 @@ public class SessionUtil {
         return session;
     }
 
-
     private void openSession() {
         closeSessionIfOpen();
         session = sessionFactory.openSession();

@@ -2,7 +2,9 @@ import beansConfig.BaseConfig;
 import connectorService.FlywayService;
 import converter.person.CreateUpdatePersonConverterImpl;
 import converter.person.ReadPersonConverterImpl;
-import converter.role.ReadRoleConverterImpl;
+import converter.record.CreateUpdateRecordConverterImpl;
+import converter.record.ReadRecordConverterImpl;
+import converter.role.RoleConverterImpl;
 import connectorService.SessionUtil;
 import converter.service.ServiceConverterImpl;
 import org.flywaydb.core.Flyway;
@@ -14,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import service.impl.PersonServiceImpl;
+import service.impl.RecordServiceImpl;
 import service.impl.RoleServiceImpl;
 import service.impl.ServiceManagementServiceImpl;
 
@@ -31,7 +34,7 @@ public class ApplicationContextTest {
         assertThatBeanExists(uncapitalize(PersonServiceImpl.class.getSimpleName()), PersonServiceImpl.class);
         assertThatBeanExists(uncapitalize(RoleServiceImpl.class.getSimpleName()), RoleServiceImpl.class);
         assertThatBeanExists(uncapitalize(ServiceManagementServiceImpl.class.getSimpleName()), ServiceManagementServiceImpl.class);
-        //another services
+        assertThatBeanExists(uncapitalize(RecordServiceImpl.class.getSimpleName()), RecordServiceImpl.class);
     }
 
     @Test
@@ -48,10 +51,14 @@ public class ApplicationContextTest {
         assertThatBeanExists(uncapitalize(ReadPersonConverterImpl.class.getSimpleName()), ReadPersonConverterImpl.class);
         assertThatBeanExists(uncapitalize(CreateUpdatePersonConverterImpl.class.getSimpleName()),
                 CreateUpdatePersonConverterImpl.class);
-        assertThatBeanExists(uncapitalize(ReadRoleConverterImpl.class.getSimpleName()), ReadRoleConverterImpl.class);
+
+        assertThatBeanExists(uncapitalize(RoleConverterImpl.class.getSimpleName()), RoleConverterImpl.class);
+
         assertThatBeanExists(uncapitalize(ServiceConverterImpl.class.getSimpleName()), ServiceConverterImpl.class);
 
-        //another converters
+        assertThatBeanExists(uncapitalize(ReadRecordConverterImpl.class.getSimpleName()), ReadRecordConverterImpl.class);
+        assertThatBeanExists(uncapitalize(CreateUpdateRecordConverterImpl.class.getSimpleName()),
+                CreateUpdateRecordConverterImpl.class);
     }
 
     private void assertThatBeanExists(String beanName, Class<?> beanClass) {

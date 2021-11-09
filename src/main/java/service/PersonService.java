@@ -2,7 +2,9 @@ package service;
 
 import dto.person.CreateUpdatePersonDto;
 import dto.person.ReadPersonDto;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
+import exceptions.UniqueRestrictionException;
 
 import java.util.Set;
 
@@ -13,8 +15,7 @@ public interface PersonService {
 
     ReadPersonDto create(CreateUpdatePersonDto personDto) throws RowNotFoundException;
 
-    void deleteById(Long id) throws RowNotFoundException;
+    void deleteById(Long id) throws RowNotFoundException, RestrictionViolationException;
 
-    //TODO fix
-    void update(CreateUpdatePersonDto personDto) throws RowNotFoundException;
+    void update(CreateUpdatePersonDto personDto) throws RowNotFoundException, UniqueRestrictionException;
 }

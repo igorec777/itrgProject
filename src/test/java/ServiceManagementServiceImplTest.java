@@ -1,10 +1,9 @@
-import dto.role.RoleDto;
+import dto.person.ReadPersonDto;
 import dto.service.ServiceDto;
-import exceptions.ConstraintViolationException;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.RoleService;
 import service.ServiceManagementService;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class ServiceManagementServiceImplTest extends BaseServiceTest {
 
     @Test
     void findById_validData_shouldReturnExistRole() throws RowNotFoundException {
-        for (Long i = 1L; i <= SERVICES_COUNT; i++) {
+        for (long i = 1L; i <= SERVICES_COUNT; i++) {
             ServiceDto existService = serviceManagementService.findById(i);
             assertNotNull(existService);
             assertEquals(i, existService.getId());
@@ -68,5 +67,37 @@ public class ServiceManagementServiceImplTest extends BaseServiceTest {
         assertThrows(RowNotFoundException.class, () -> serviceManagementService.findById(999L));
         assertThrows(RowNotFoundException.class, () -> serviceManagementService.findById(-53L));
         assertThrows(RowNotFoundException.class, () -> serviceManagementService.findById(0L));
+    }
+
+    @Test
+    void deleteById_validData_shouldPass() throws RowNotFoundException, RestrictionViolationException {
+        ServiceDto serviceDto = ServiceDto.builder()
+                .id(1L)
+                .build();
+        serviceManagementService.deleteById(serviceDto.getId());
+        System.out.println("Deleted: " + serviceDto);
+    }
+
+    @Test
+    void deleteById_wrongData_shouldThrowException() {
+        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(0L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(-45L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(95844L)
+                .build().getId()));
+    }
+
+    @Test
+    void deleteById_noSuitableData_shouldThrowException() {
+        assertThrows(RestrictionViolationException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(2L)
+                .build().getId()));
+        assertThrows(RestrictionViolationException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(3L)
+                .build().getId()));
     }
 }

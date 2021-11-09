@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateUpdatePersonConverterImpl implements BaseConverter<CreateUpdatePersonDto, Person> {
 
-
     @Override
     public Person fromDto(CreateUpdatePersonDto dto) {
         return Person.builder()
@@ -18,10 +17,5 @@ public class CreateUpdatePersonConverterImpl implements BaseConverter<CreateUpda
                 .login(dto.getLogin())
                 .password(dto.getPassword())
                 .build();
-    }
-
-    @Override
-    public CreateUpdatePersonDto toDto(Person entity) {
-        return null;
     }
 }

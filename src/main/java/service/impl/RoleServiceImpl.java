@@ -1,13 +1,14 @@
 package service.impl;
 
-import converter.role.ReadRoleConverterImpl;
+import converter.role.RoleConverterImpl;
 import dao.PersonDao;
 import dao.RoleDao;
 import dto.role.RoleDto;
 import entity.Person;
 import entity.Role;
-import exceptions.ConstraintViolationException;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
+import exceptions.UniqueRestrictionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.RoleService;
@@ -20,47 +21,61 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleDao roleDao;
     private final PersonDao personDao;
-    private final ReadRoleConverterImpl readRoleConverter;
+    private final RoleConverterImpl roleConverter;
 
 
     @Autowired
-    RoleServiceImpl(RoleDao roleDao, PersonDao personDao, ReadRoleConverterImpl readRoleConverter) {
+    RoleServiceImpl(RoleDao roleDao, PersonDao personDao, RoleConverterImpl roleConverter) {
         this.roleDao = roleDao;
         this.personDao = personDao;
-        this.readRoleConverter = readRoleConverter;
+        this.roleConverter = roleConverter;
     }
 
     @Override
     public RoleDto findById(Long id) throws RowNotFoundException {
-        return readRoleConverter.toDto(roleDao.findById(id));
+        return roleConverter.toDto(roleDao.findById(id));
     }
 
     @Override
     public Set<RoleDto> findAll() {
         return roleDao.findAll().stream()
-                .map(readRoleConverter::toDto)
+                .map(roleConverter::toDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
     public RoleDto create(RoleDto roleDto) throws RowNotFoundException {
-        return readRoleConverter.toDto(roleDao.create(readRoleConverter.fromDto(roleDto)));
-    }
-
-    //TODO fix
-    @Override
-    public void update(RoleDto roleDto) {
-        roleDao.update(readRoleConverter.fromDto(roleDto));
+        return roleConverter.toDto(roleDao.create(roleConverter.fromDto(roleDto)));
     }
 
     @Override
-    public void deleteById(Long id) throws RowNotFoundException, ConstraintViolationException {
+    public void update(RoleDto roleDto) throws RowNotFoundException, UniqueRestrictionException {
+        //check is role exist and then
+        //set people to role because this method update only non reference fields
+        Role roleToUpdate = roleConverter.fromDto(roleDto);
+        roleToUpdate.setPeople(roleDao.findById(roleDto.getId()).getPeople());
+        //check if name value is unique
+        Set<Role> existRoles = roleDao.findAll();
+        boolean isNameNotUnique = existRoles.stream()
+                .anyMatch(p -> p.getName().equals(roleToUpdate.getName()));
+        if (isNameNotUnique) {
+            String exMessage = Role.class.getSimpleName() + " with id:" + roleToUpdate.getId() +
+                    " restrict the unique key constraint on the field 'name'";
+            System.out.println("Log: " + exMessage);
+            throw new UniqueRestrictionException(exMessage);
+        }
+        roleDao.update(roleToUpdate);
+    }
+
+    @Override
+    public void deleteById(Long id) throws RowNotFoundException, RestrictionViolationException {
         Role existRole = roleDao.findById(id);
         Set<Person> existPeople = personDao.findAll();
         if (isAnyPersonHasRole(existPeople, id)) {
-            String msg = "Cannot delete role with id: " + id + ". Some person references to this role";
-            System.out.println(msg);
-            throw new ConstraintViolationException(msg);
+            String exMessage = "Cannot delete " + Role.class.getSimpleName() + " with id: " + id + " because" +
+                    " some " + Person.class.getSimpleName() + "(s) references to this " + Role.class.getSimpleName();
+            System.out.println("Log: " + exMessage);
+            throw new RestrictionViolationException(exMessage);
         }
         roleDao.delete(existRole);
     }

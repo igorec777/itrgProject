@@ -1,10 +1,9 @@
 package service;
 
-import dto.person.CreateUpdatePersonDto;
-import dto.person.ReadPersonDto;
 import dto.role.RoleDto;
-import exceptions.ConstraintViolationException;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
+import exceptions.UniqueRestrictionException;
 
 import java.util.Set;
 
@@ -16,8 +15,7 @@ public interface RoleService {
 
     RoleDto create(RoleDto roleDto) throws RowNotFoundException;
 
-    //TODO fix
-    void update(RoleDto roleDto);
+    void update(RoleDto roleDto) throws RowNotFoundException, UniqueRestrictionException;
 
-    void deleteById(Long id) throws RowNotFoundException, ConstraintViolationException;
+    void deleteById(Long id) throws RowNotFoundException, RestrictionViolationException;
 }

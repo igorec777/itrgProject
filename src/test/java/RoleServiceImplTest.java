@@ -1,6 +1,8 @@
+import dto.person.CreateUpdatePersonDto;
 import dto.role.RoleDto;
-import exceptions.ConstraintViolationException;
+import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
+import exceptions.UniqueRestrictionException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import service.RoleService;
@@ -13,7 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoleServiceImplTest extends BaseServiceTest{
 
     private final RoleService roleService;
-    private static final Long ROLES_COUNT = 4L;
+    private static final Long ROLE_COUNT = 4L;
+    private static final List<String> testRoleNames = List.of("Admin", "Worker", "Client", "Manager");
 
     @Autowired
     RoleServiceImplTest(RoleService roleService) {
@@ -29,7 +32,7 @@ class RoleServiceImplTest extends BaseServiceTest{
         RoleDto createdRole = roleService.create(newRole);
 
         assertNotNull(createdRole);
-        assertEquals(ROLES_COUNT + 1, createdRole.getId());
+        assertEquals(ROLE_COUNT + 1, createdRole.getId());
         assertEquals(newRole.getName(), createdRole.getName());
 
         System.out.println(createdRole);
@@ -38,18 +41,17 @@ class RoleServiceImplTest extends BaseServiceTest{
 
     @Test
     void findAll_shouldReturnSetOfRoles() {
-        List<String> existRoles = List.of("Admin", "Worker", "Client", "Manager");
         Set<RoleDto> roles = roleService.findAll();
 
         assertNotNull(roles);
-        assertEquals(ROLES_COUNT, roles.size());
-        assertTrue(roles.stream().allMatch(r -> existRoles.contains(r.getName())));
+        assertEquals(ROLE_COUNT, roles.size());
+        assertTrue(roles.stream().allMatch(r -> testRoleNames.contains(r.getName())));
         System.out.println(roles);
     }
 
     @Test
     void findById_validData_shouldReturnExistRole() throws RowNotFoundException {
-        for (Long i = 1L; i <= ROLES_COUNT; i++) {
+        for (long i = 1L; i <= ROLE_COUNT; i++) {
             RoleDto existRole = roleService.findById(i);
             assertNotNull(existRole);
             assertEquals(i, existRole.getId());
@@ -65,19 +67,27 @@ class RoleServiceImplTest extends BaseServiceTest{
         assertThrows(RowNotFoundException.class, () -> roleService.findById(0L));
     }
 
-    //TODO fix
-//    @Test
-//    void update_validData_shouldPass() {
-//        RoleDto roleDto = RoleDto.builder()
-//                .id(1L)
-//                .name("newName")
-//                .build();
-//        roleService.update(roleDto);
-//        System.out.println("Deleted: " + roleDto);
-//    }
+    @Test
+    void update_validData_shouldPass() throws UniqueRestrictionException, RowNotFoundException {
+        RoleDto roleDto = RoleDto.builder()
+                .id(1L)
+                .name("newName")
+                .build();
+        roleService.update(roleDto);
+    }
 
     @Test
-    void deleteById_validData_shouldPass() throws RowNotFoundException, ConstraintViolationException {
+    void update_noSuitableData_shouldThrowException() {
+
+        testRoleNames.forEach(rn ->
+                assertThrows(UniqueRestrictionException.class, () -> roleService.update(RoleDto.builder()
+                        .id(1L)
+                        .name(rn)
+                        .build())));
+    }
+
+    @Test
+    void deleteById_validData_shouldPass() throws RowNotFoundException, RestrictionViolationException {
 
         RoleDto roleDto = RoleDto.builder()
                 .id(4L)
@@ -101,13 +111,13 @@ class RoleServiceImplTest extends BaseServiceTest{
 
     @Test
     void deleteById_noSuitableData_shouldThrowException() {
-        assertThrows(ConstraintViolationException.class, () -> roleService.deleteById(RoleDto.builder()
+        assertThrows(RestrictionViolationException.class, () -> roleService.deleteById(RoleDto.builder()
                 .id(1L)
                 .build().getId()));
-        assertThrows(ConstraintViolationException.class, () -> roleService.deleteById(RoleDto.builder()
+        assertThrows(RestrictionViolationException.class, () -> roleService.deleteById(RoleDto.builder()
                 .id(2L)
                 .build().getId()));
-        assertThrows(ConstraintViolationException.class, () -> roleService.deleteById(RoleDto.builder()
+        assertThrows(RestrictionViolationException.class, () -> roleService.deleteById(RoleDto.builder()
                 .id(3L)
                 .build().getId()));
     }
