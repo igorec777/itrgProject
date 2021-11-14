@@ -1,12 +1,12 @@
-package converter.person;
+package converter.person.impl;
 
-import converter.BaseConverter;
+import converter.person.CreateUpdatePersonConverter;
 import dto.person.CreateUpdatePersonDto;
 import entity.Person;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CreateUpdatePersonConverterImpl implements BaseConverter<CreateUpdatePersonDto, Person> {
+public class CreateUpdatePersonConverterImpl implements CreateUpdatePersonConverter {
 
     @Override
     public Person fromDto(CreateUpdatePersonDto dto) {

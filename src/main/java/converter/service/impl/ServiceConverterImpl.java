@@ -1,12 +1,12 @@
-package converter.service;
+package converter.service.impl;
 
-import converter.BaseConverter;
+import converter.service.ServiceConverter;
 import dto.service.ServiceDto;
 import entity.Service;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceConverterImpl implements BaseConverter<ServiceDto, Service> {
+public class ServiceConverterImpl implements ServiceConverter {
 
     @Override
     public Service fromDto(ServiceDto dto) {

@@ -1,28 +1,21 @@
-package converter.person;
+package converter.person.impl;
 
-import converter.BaseConverter;
+import converter.person.ReadPersonConverter;
 import dto.person.ReadPersonDto;
 import entity.Person;
-import entity.Role;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @Component
-public class ReadPersonConverterImpl implements BaseConverter<ReadPersonDto, Person> {
+public class ReadPersonConverterImpl implements ReadPersonConverter {
 
     @Override
     public ReadPersonDto toDto(Person entity) {
-        String roles = entity.getRoles()
-                .stream()
-                .map(Role::getName)
-                .collect(Collectors.joining(","));
         return ReadPersonDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .surname(entity.getSurname())
                 .login(entity.getLogin())
-                .roles(roles)
+                .roles(entity.getRoles())
                 .build();
     }
 }

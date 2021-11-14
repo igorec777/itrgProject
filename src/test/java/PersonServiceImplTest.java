@@ -1,10 +1,7 @@
 import dto.person.CreateUpdatePersonDto;
 import dto.person.ReadPersonDto;
-import dto.record.ReadRecordDto;
-import dto.role.RoleDto;
-import entity.Person;
-import exceptions.RestrictionViolationException;
 import exceptions.RowNotFoundException;
+import exceptions.UnavailableObjectException;
 import exceptions.UniqueRestrictionException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,9 @@ class PersonServiceImplTest extends BaseServiceTest {
     }
 
     @Test
-    void create_validData_shouldReturnCreatedPerson() throws RowNotFoundException {
+    void create_validData_shouldReturnCreatedPerson() throws RowNotFoundException,
+            UnavailableObjectException, UniqueRestrictionException {
+
         CreateUpdatePersonDto newPerson = CreateUpdatePersonDto.builder()
                 .name("newName")
                 .surname("newSurname")
@@ -47,7 +46,19 @@ class PersonServiceImplTest extends BaseServiceTest {
 
     @Test
     void create_wrongData_shouldThrowException() {
-        assertThrows(NullPointerException.class, () -> personService.create(null));
+        assertThrows(UnavailableObjectException.class, () -> personService.create(null));
+    }
+
+    @Test
+    void create_wrongData_shouldThrowException2() {
+        CreateUpdatePersonDto newPerson = CreateUpdatePersonDto.builder()
+                .name("newName")
+                .surname("newSurname")
+                //person with this login already exist
+                .login("Login1")
+                .password("1111")
+                .build();
+        assertThrows(UniqueRestrictionException.class, () -> personService.create(newPerson));
     }
 
     @Test
@@ -55,6 +66,7 @@ class PersonServiceImplTest extends BaseServiceTest {
         Set<ReadPersonDto> people = personService.findAll();
         assertNotNull(people);
         assertEquals(3, people.size());
+        people.forEach(p -> assertNotNull(p.getRoles()));
         System.out.println(people);
     }
 
@@ -79,60 +91,60 @@ class PersonServiceImplTest extends BaseServiceTest {
         assertThrows(RowNotFoundException.class, () -> personService.findById(0L));
     }
 
-    @Test
-    void update_validData_shouldPass() throws RowNotFoundException, UniqueRestrictionException {
-        CreateUpdatePersonDto updatedPerson = CreateUpdatePersonDto.builder()
-                        .id(2L)
-                        .name("someName")
-                        .surname("someSurname")
-                        .login("someLogin")
-                        .password("1111")
-                        .build();
-        personService.update(updatedPerson);
-    }
-
-    @Test
-    void update_noSuitableData_shouldThrowException() {
-        CreateUpdatePersonDto updatedPerson = CreateUpdatePersonDto.builder()
-                .id(1L)
-                .name("someName")
-                .surname("someSurname")
-                //person already exist with this login, should throw exception
-                .login("Login2")
-                .password("1111")
-                .build();
-        assertThrows(UniqueRestrictionException.class, () -> personService.update(updatedPerson));
-    }
-
-    @Test
-    void deleteById_validData_shouldPass() throws RowNotFoundException, RestrictionViolationException {
-        ReadPersonDto personDto = ReadPersonDto.builder()
-                .id(3L)
-                .build();
-        personService.deleteById(personDto.getId());
-        System.out.println("Deleted: " + personDto);
-    }
-
-    @Test
-    void deleteById_wrongData_shouldThrowException() {
-        assertThrows(RowNotFoundException.class, () -> personService.deleteById(ReadPersonDto.builder()
-                .id(0L)
-                .build().getId()));
-        assertThrows(RowNotFoundException.class, () -> personService.deleteById(ReadPersonDto.builder()
-                .id(-45L)
-                .build().getId()));
-        assertThrows(RowNotFoundException.class, () -> personService.deleteById(ReadPersonDto.builder()
-                .id(95844L)
-                .build().getId()));
-    }
-
-    @Test
-    void deleteById_noSuitableData_shouldThrowException() {
-        assertThrows(RestrictionViolationException.class, () -> personService.deleteById(ReadPersonDto.builder()
-                .id(1L)
-                .build().getId()));
-        assertThrows(RestrictionViolationException.class, () -> personService.deleteById(ReadPersonDto.builder()
-                .id(2L)
-                .build().getId()));
-    }
+//    @Test
+//    void update_validData_shouldPass() throws RowNotFoundException, UniqueRestrictionException {
+//        CreateUpdatePersonDto updatedPerson = CreateUpdatePersonDto.builder()
+//                        .id(2L)
+//                        .name("someName")
+//                        .surname("someSurname")
+//                        .login("someLogin")
+//                        .password("1111")
+//                        .build();
+//        personService.update(updatedPerson);
+//    }
+//
+//    @Test
+//    void update_noSuitableData_shouldThrowException() {
+//        CreateUpdatePersonDto updatedPerson = CreateUpdatePersonDto.builder()
+//                .id(1L)
+//                .name("someName")
+//                .surname("someSurname")
+//                //person already exist with this login, should throw exception
+//                .login("Login2")
+//                .password("1111")
+//                .build();
+//        assertThrows(UniqueRestrictionException.class, () -> personService.update(updatedPerson));
+//    }
+//
+//    @Test
+//    void deleteById_validData_shouldPass() throws RowNotFoundException, ReferenceRestrictionException {
+//        ReadPersonDto personDto = ReadPersonDto.builder()
+//                .id(3L)
+//                .build();
+//        personService.deleteById(personDto.getId());
+//        System.out.println("Deleted: " + personDto);
+//    }
+//
+//    @Test
+//    void deleteById_wrongData_shouldThrowException() {
+//        assertThrows(RowNotFoundException.class, () -> personService.deleteById(ReadPersonDto.builder()
+//                .id(0L)
+//                .build().getId()));
+//        assertThrows(RowNotFoundException.class, () -> personService.deleteById(ReadPersonDto.builder()
+//                .id(-45L)
+//                .build().getId()));
+//        assertThrows(RowNotFoundException.class, () -> personService.deleteById(ReadPersonDto.builder()
+//                .id(95844L)
+//                .build().getId()));
+//    }
+//
+//    @Test
+//    void deleteById_noSuitableData_shouldThrowException() {
+//        assertThrows(ReferenceRestrictionException.class, () -> personService.deleteById(ReadPersonDto.builder()
+//                .id(1L)
+//                .build().getId()));
+//        assertThrows(ReferenceRestrictionException.class, () -> personService.deleteById(ReadPersonDto.builder()
+//                .id(2L)
+//                .build().getId()));
+//    }
 }

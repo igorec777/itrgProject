@@ -25,7 +25,7 @@ public class Person extends BaseEntity<Long> {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "person_has_role",
             joinColumns = @JoinColumn(name = "personId"),

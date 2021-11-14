@@ -4,8 +4,6 @@ import dao.ServiceDao;
 import connectorService.SessionUtil;
 import entity.Service;
 import exceptions.RowNotFoundException;
-import org.hibernate.Hibernate;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,43 +24,33 @@ public class ServiceDaoImpl implements ServiceDao {
 
     @Override
     public Service findById(Long id) throws RowNotFoundException {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Service existService = session.load(Service.class, id);
-        try {
-            Hibernate.initialize(existService);
-            session.getTransaction().commit();
-        } catch (ObjectNotFoundException ex) {
-            session.getTransaction().rollback();
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        Service existService = sessionUtil.getSession().get(Service.class, id);
+        if (existService == null) {
             String exMessage = Service.class.getSimpleName() + " with id:" + id + " not found";
-            System.out.println("Log: " + Service.class.getSimpleName() + " with id:" + id + " not found");
+            System.out.println("Log: " + exMessage);
             throw new RowNotFoundException(exMessage);
-        } finally {
-            sessionUtil.closeSessionIfOpen();
         }
         return existService;
     }
 
     @Override
     public Set<Service> findAll() {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Set<Service> services = session.createQuery("select r from Service r", Service.class)
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        return sessionUtil.getSession().createQuery("select r from Service r", Service.class)
                 .getResultStream()
                 .collect(Collectors.toSet());
-        session.getTransaction().commit();
-        sessionUtil.closeSessionIfOpen();
-        return services;
     }
 
     @Override
     public Service create(Service service) {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Serializable createdId = session.save(service);
-        Service createdService = session.load(Service.class, createdId);
-        session.getTransaction().commit();
-        sessionUtil.closeSessionIfOpen();
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        Serializable createdId = sessionUtil.getSession().save(service);
+        Service createdService = sessionUtil.getSession().load(Service.class, createdId);
+        sessionUtil.commitAndClose();
         return createdService;
     }
 

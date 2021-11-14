@@ -26,44 +26,34 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role create(Role role) {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Serializable createdId = session.save(role);
-        Role createdRole = session.load(Role.class, createdId);
-        session.getTransaction().commit();
-        sessionUtil.closeSessionIfOpen();
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        Serializable createdId = sessionUtil.getSession().save(role);
+        Role createdRole = sessionUtil.getSession().load(Role.class, createdId);
+        sessionUtil.commitAndClose();
         return createdRole;
     }
 
     @Override
     public Role findById(Long id) throws RowNotFoundException {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Role existRole = session.load(Role.class, id);
-        try {
-            Hibernate.initialize(existRole);
-            session.getTransaction().commit();
-        } catch (ObjectNotFoundException ex) {
-            session.getTransaction().rollback();
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        Role existRole = sessionUtil.getSession().get(Role.class, id);
+        if (existRole == null) {
             String exMessage = Role.class.getSimpleName() + " with id:" + id + " not found";
-            System.out.println("Log: " + Role.class.getSimpleName() + " with id:" + id + " not found");
+            System.out.println("Log: " + exMessage);
             throw new RowNotFoundException(exMessage);
-        } finally {
-            sessionUtil.closeSessionIfOpen();
         }
         return existRole;
     }
 
     @Override
     public Set<Role> findAll() {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Set<Role> roles = session.createQuery("select r from Role r", Role.class)
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        return sessionUtil.getSession().createQuery("select r from Role r", Role.class)
                 .getResultStream()
                 .collect(Collectors.toSet());
-        session.getTransaction().commit();
-        sessionUtil.closeSessionIfOpen();
-        return roles;
     }
 
     @Override

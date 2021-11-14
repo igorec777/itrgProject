@@ -1,8 +1,9 @@
 package service;
 
 import dto.role.RoleDto;
-import exceptions.RestrictionViolationException;
+import exceptions.ReferenceRestrictionException;
 import exceptions.RowNotFoundException;
+import exceptions.UnavailableObjectException;
 import exceptions.UniqueRestrictionException;
 
 import java.util.Set;
@@ -13,9 +14,11 @@ public interface RoleService {
 
     Set<RoleDto> findAll();
 
-    RoleDto create(RoleDto roleDto) throws RowNotFoundException;
+    RoleDto create(RoleDto roleDto) throws RowNotFoundException, UnavailableObjectException, UniqueRestrictionException;
 
+    //todo
     void update(RoleDto roleDto) throws RowNotFoundException, UniqueRestrictionException;
 
-    void deleteById(Long id) throws RowNotFoundException, RestrictionViolationException;
+    //todo
+    void deleteById(Long id) throws RowNotFoundException, ReferenceRestrictionException;
 }

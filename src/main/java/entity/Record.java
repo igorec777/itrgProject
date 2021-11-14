@@ -22,15 +22,15 @@ public class Record extends BaseEntity<Long> {
     @Column(name = "endTime", nullable = false)
     private Timestamp endTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "clientId", nullable = false)
     private Person client;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "workerId", nullable = false)
     private Person worker;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "serviceId", nullable = false)
     private Service service;
 

@@ -1,10 +1,13 @@
 package dto.person;
 
 
+import entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 
 @NoArgsConstructor
@@ -18,5 +21,5 @@ public class ReadPersonDto {
     private String surname;
     private String login;
 
-    private String roles;
+    private Set<Role> roles;
 }

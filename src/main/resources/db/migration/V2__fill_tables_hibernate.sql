@@ -36,7 +36,9 @@ values ('Sugaring', 40.2);
 insert into service (name, price)
 values ('Pedicure', 65.8);
 
-insert into record (startTime, endTime, clientId, workerId, serviceId)
-values (parsedatetime('2021-09-25 11:20:00', 'yyyy-mm-dd hh:mm:ss'), parsedatetime('2021-09-25 13:20:00', 'yyyy-mm-dd hh:mm:ss'), 1, 2, 3);
-insert into record (startTime, endTime, clientId, workerId, serviceId)
-values (parsedatetime('2021-09-20 18:35:00', 'yyyy-mm-dd hh:mm:ss'), parsedatetime('2021-09-20 19:00:00', 'yyyy-mm-dd hh:mm:ss'), 2, 1, 2);
+insert into record (startTime, endTIme, clientId, workerId, serviceId)
+values (parsedatetime('2021-09-25 11:20:00', 'yyyy-MM-dd HH:mm:ss'), parsedatetime('2021-09-25 13:20:00', 'yyyy-MM-dd HH:mm:ss'), 1, 2, 3);
+
+insert into record (startTime, endTIme, clientId, workerId, serviceId)
+values (parsedatetime('2021-09-20 18:35:00', 'yyyy-MM-dd HH:mm:ss'), parsedatetime('2021-09-20 19:00:00', 'yyyy-MM-dd HH:mm:ss'), 2, 1, 2);
+

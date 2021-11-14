@@ -2,6 +2,7 @@ package dao.impl;
 
 import connectorService.SessionUtil;
 import dao.RecordDao;
+import entity.Person;
 import entity.Record;
 import exceptions.RowNotFoundException;
 import org.hibernate.Hibernate;
@@ -26,50 +27,35 @@ public class RecordDaoImpl implements RecordDao {
 
     @Override
     public Record findById(Long id) throws RowNotFoundException {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Record existRecord = session.load(Record.class, id);
-        try {
-            Hibernate.initialize(existRecord.getClient());
-            Hibernate.initialize(existRecord.getWorker());
-            Hibernate.initialize(existRecord.getService());
-            session.getTransaction().commit();
-        } catch (ObjectNotFoundException ex) {
-            session.getTransaction().rollback();
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+
+        Record existRecord = sessionUtil.getSession().get(Record.class, id);
+        if (existRecord == null) {
             String exMessage = Record.class.getSimpleName() + " with id:" + id + " not found";
-            System.out.println("Log: " + Record.class.getSimpleName() + " with id:" + id + " not found");
+            System.out.println("Log: " + exMessage);
             throw new RowNotFoundException(exMessage);
-        } finally {
-            sessionUtil.closeSessionIfOpen();
         }
         return existRecord;
     }
 
     @Override
     public Set<Record> findAll() {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Set<Record> records = session.createQuery("select r from Record r", Record.class)
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        return sessionUtil.getSession().createQuery("select r from Record r",
+                        Record.class)
                 .getResultStream()
                 .collect(Collectors.toSet());
-        records.forEach(r -> {
-            Hibernate.initialize(r.getClient());
-            Hibernate.initialize(r.getWorker());
-            Hibernate.initialize(r.getService());
-        });
-        session.getTransaction().commit();
-        sessionUtil.closeSessionIfOpen();
-        return records;
     }
 
     @Override
     public Record create(Record record) {
-        Session session = sessionUtil.getNewSession();
-        session.beginTransaction();
-        Serializable createdId = session.save(record);
-        Record createdRecord = session.load(Record.class, createdId);
-        session.getTransaction().commit();
-        sessionUtil.closeSessionIfOpen();
+        sessionUtil.openSession();
+        sessionUtil.beginTransaction();
+        Serializable createdId = sessionUtil.getSession().save(record);
+        Record createdRecord = sessionUtil.getSession().load(Record.class, createdId);
+        sessionUtil.commitAndClose();
         return createdRecord;
     }
 

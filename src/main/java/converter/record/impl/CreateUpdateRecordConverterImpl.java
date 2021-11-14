@@ -1,12 +1,12 @@
-package converter.record;
+package converter.record.impl;
 
-import converter.BaseConverter;
+import converter.record.CreateUpdateRecordConverter;
 import dto.record.CreateUpdateRecordDto;
 import entity.Record;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CreateUpdateRecordConverterImpl implements BaseConverter<CreateUpdateRecordDto, Record> {
+public class CreateUpdateRecordConverterImpl implements CreateUpdateRecordConverter {
 
     @Override
     public Record fromDto(CreateUpdateRecordDto dto) {

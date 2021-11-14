@@ -15,12 +15,17 @@ public class SessionUtil {
         this.sessionFactory = sessionFactory;
     }
 
+    //TODO deprecated
     public Session getNewSession() {
         openSession();
         return session;
     }
 
-    private void openSession() {
+    public Session getSession() {
+        return session;
+    }
+
+    public void openSession() {
         closeSessionIfOpen();
         session = sessionFactory.openSession();
     }
@@ -29,5 +34,18 @@ public class SessionUtil {
         if (session != null && session.isOpen()) {
             session.close();
         }
+    }
+
+    public void beginTransaction() {
+        session.beginTransaction();
+    }
+
+    public void commitAndClose() {
+        session.getTransaction().commit();
+        closeSessionIfOpen();
+    }
+    public void rollbackAndClose() {
+        session.getTransaction().rollback();
+        closeSessionIfOpen();
     }
 }

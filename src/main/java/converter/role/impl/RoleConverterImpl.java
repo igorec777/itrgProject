@@ -1,12 +1,13 @@
-package converter.role;
+package converter.role.impl;
 
-import converter.BaseConverter;
+import converter.role.RoleConverter;
 import dto.role.RoleDto;
 import entity.Role;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoleConverterImpl implements BaseConverter<RoleDto, Role> {
+public class RoleConverterImpl implements RoleConverter {
+
     @Override
     public Role fromDto(RoleDto dto) {
         return Role.builder()
