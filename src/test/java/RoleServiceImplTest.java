@@ -1,4 +1,5 @@
 import dto.role.RoleDto;
+import exceptions.ReferenceRestrictionException;
 import exceptions.RowNotFoundException;
 import exceptions.UnavailableObjectException;
 import exceptions.UniqueRestrictionException;
@@ -35,8 +36,6 @@ class RoleServiceImplTest extends BaseServiceTest {
         assertNotNull(createdRole);
         assertEquals(ROLE_COUNT + 1, createdRole.getId());
         assertEquals(newRole.getName(), createdRole.getName());
-
-        System.out.println(createdRole);
     }
 
 
@@ -47,7 +46,6 @@ class RoleServiceImplTest extends BaseServiceTest {
         assertNotNull(roles);
         assertEquals(ROLE_COUNT, roles.size());
         assertTrue(roles.stream().allMatch(r -> testRoleNames.contains(r.getName())));
-        System.out.println(roles);
     }
 
     @Test
@@ -57,7 +55,6 @@ class RoleServiceImplTest extends BaseServiceTest {
             assertNotNull(existRole);
             assertEquals(i, existRole.getId());
             assertNotNull(existRole.getName());
-            System.out.println(existRole);
         }
     }
 
@@ -68,58 +65,38 @@ class RoleServiceImplTest extends BaseServiceTest {
         assertThrows(RowNotFoundException.class, () -> roleService.findById(0L));
     }
 
-//    @Test
-//    void update_validData_shouldPass() throws UniqueRestrictionException, RowNotFoundException {
-//        RoleDto roleDto = RoleDto.builder()
-//                .id(1L)
-//                .name("newName")
-//                .build();
-//        roleService.update(roleDto);
-//    }
-//
-//    @Test
-//    void update_noSuitableData_shouldThrowException() {
-//
-//        testRoleNames.forEach(rn ->
-//                assertThrows(UniqueRestrictionException.class, () -> roleService.update(RoleDto.builder()
-//                        .id(1L)
-//                        .name(rn)
-//                        .build())));
-//    }
-//
-//    @Test
-//    void deleteById_validData_shouldPass() throws RowNotFoundException, ReferenceRestrictionException {
-//
-//        RoleDto roleDto = RoleDto.builder()
-//                .id(4L)
-//                .build();
-//        roleService.deleteById(roleDto.getId());
-//        System.out.println("Deleted: " + roleDto);
-//    }
-//
-//    @Test
-//    void deleteById_wrongData_shouldThrowException() {
-//        assertThrows(RowNotFoundException.class, () -> roleService.deleteById(RoleDto.builder()
-//                .id(0L)
-//                .build().getId()));
-//        assertThrows(RowNotFoundException.class, () -> roleService.deleteById(RoleDto.builder()
-//                .id(-45L)
-//                .build().getId()));
-//        assertThrows(RowNotFoundException.class, () -> roleService.deleteById(RoleDto.builder()
-//                .id(95844L)
-//                .build().getId()));
-//    }
-//
-//    @Test
-//    void deleteById_noSuitableData_shouldThrowException() {
-//        assertThrows(ReferenceRestrictionException.class, () -> roleService.deleteById(RoleDto.builder()
-//                .id(1L)
-//                .build().getId()));
-//        assertThrows(ReferenceRestrictionException.class, () -> roleService.deleteById(RoleDto.builder()
-//                .id(2L)
-//                .build().getId()));
-//        assertThrows(ReferenceRestrictionException.class, () -> roleService.deleteById(RoleDto.builder()
-//                .id(3L)
-//                .build().getId()));
-//    }
+    @Test
+    void deleteById_validData_shouldPass() throws RowNotFoundException, ReferenceRestrictionException {
+
+        RoleDto roleDto = RoleDto.builder()
+                .id(4L)
+                .build();
+        roleService.deleteById(roleDto.getId());
+    }
+
+    @Test
+    void deleteById_wrongData_shouldThrowException() {
+        assertThrows(RowNotFoundException.class, () -> roleService.deleteById(RoleDto.builder()
+                .id(0L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> roleService.deleteById(RoleDto.builder()
+                .id(-45L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> roleService.deleteById(RoleDto.builder()
+                .id(95844L)
+                .build().getId()));
+    }
+
+    @Test
+    void deleteById_noSuitableData_shouldThrowException() {
+        assertThrows(ReferenceRestrictionException.class, () -> roleService.deleteById(RoleDto.builder()
+                .id(1L)
+                .build().getId()));
+        assertThrows(ReferenceRestrictionException.class, () -> roleService.deleteById(RoleDto.builder()
+                .id(2L)
+                .build().getId()));
+        assertThrows(ReferenceRestrictionException.class, () -> roleService.deleteById(RoleDto.builder()
+                .id(3L)
+                .build().getId()));
+    }
 }

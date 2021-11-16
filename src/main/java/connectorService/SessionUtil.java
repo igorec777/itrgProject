@@ -25,9 +25,10 @@ public class SessionUtil {
         return session;
     }
 
-    public void openSession() {
+    public SessionUtil openSession() {
         closeSessionIfOpen();
         session = sessionFactory.openSession();
+        return this;
     }
 
     public void closeSessionIfOpen() {
@@ -36,8 +37,9 @@ public class SessionUtil {
         }
     }
 
-    public void beginTransaction() {
+    public SessionUtil beginTransaction() {
         session.beginTransaction();
+        return this;
     }
 
     public void commitAndClose() {

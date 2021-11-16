@@ -16,9 +16,5 @@ public interface RoleService {
 
     RoleDto create(RoleDto roleDto) throws RowNotFoundException, UnavailableObjectException, UniqueRestrictionException;
 
-    //todo
-    void update(RoleDto roleDto) throws RowNotFoundException, UniqueRestrictionException;
-
-    //todo
     void deleteById(Long id) throws RowNotFoundException, ReferenceRestrictionException;
 }

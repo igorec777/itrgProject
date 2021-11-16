@@ -16,6 +16,5 @@ public interface ServiceManagementService {
 
     ServiceDto create(ServiceDto serviceDto) throws UnavailableObjectException, UniqueRestrictionException;
 
-    //todo
     void deleteById(Long id) throws RowNotFoundException, ReferenceRestrictionException;
 }

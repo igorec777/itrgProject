@@ -33,7 +33,6 @@ public class RecordServiceImplTest extends BaseServiceTest {
         for (ReadRecordDto r : records) {
             isAllClassFieldsNotNullOfGivenObject(r);
         }
-        System.out.println(records);
     }
 
     @Test
@@ -42,7 +41,6 @@ public class RecordServiceImplTest extends BaseServiceTest {
             ReadRecordDto existRecord = recordService.findById(i);
             assertNotNull(existRecord);
             assertTrue(isAllClassFieldsNotNullOfGivenObject(existRecord));
-            System.out.println(existRecord);
         }
     }
 
@@ -70,8 +68,6 @@ public class RecordServiceImplTest extends BaseServiceTest {
 
         assertNotNull(createdRecord);
         assertTrue(isAllClassFieldsNotNullOfGivenObject(createdRecord));
-
-        System.out.println(createdRecord);
     }
 
     @Test
@@ -102,27 +98,26 @@ public class RecordServiceImplTest extends BaseServiceTest {
         assertThrows(RecordOccupiedTimeException.class, () -> recordService.create(newRecord));
     }
 
-//    @Test
-//    void deleteById_validData_shouldPass() throws RowNotFoundException {
-//        for (long i = 1L; i <= RECORD_COUNT; i++) {
-//            ReadRecordDto recordDto = ReadRecordDto.builder()
-//                    .id(i)
-//                    .build();
-//            recordService.deleteById(recordDto.getId());
-//            System.out.println("Deleted: " + recordDto);
-//        }
-//    }
-//
-//    @Test
-//    void deleteById_wrongData_shouldThrowException() {
-//        assertThrows(RowNotFoundException.class, () -> recordService.deleteById(ReadRecordDto.builder()
-//                .id(0L)
-//                .build().getId()));
-//        assertThrows(RowNotFoundException.class, () -> recordService.deleteById(ReadRecordDto.builder()
-//                .id(-45L)
-//                .build().getId()));
-//        assertThrows(RowNotFoundException.class, () -> recordService.deleteById(ReadRecordDto.builder()
-//                .id(95844L)
-//                .build().getId()));
-//    }
+    @Test
+    void deleteById_validData_shouldPass() throws RowNotFoundException {
+        for (long i = 1L; i <= RECORD_COUNT; i++) {
+            ReadRecordDto recordDto = ReadRecordDto.builder()
+                    .id(i)
+                    .build();
+            recordService.deleteById(recordDto.getId());
+        }
+    }
+
+    @Test
+    void deleteById_wrongData_shouldThrowException() {
+        assertThrows(RowNotFoundException.class, () -> recordService.deleteById(ReadRecordDto.builder()
+                .id(0L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> recordService.deleteById(ReadRecordDto.builder()
+                .id(-45L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> recordService.deleteById(ReadRecordDto.builder()
+                .id(95844L)
+                .build().getId()));
+    }
 }

@@ -12,11 +12,7 @@ import dto.person.ReadPersonDto;
 import entity.Person;
 import entity.Record;
 import entity.Role;
-import exceptions.ReferenceRestrictionException;
-import exceptions.RowNotFoundException;
-import exceptions.UnavailableObjectException;
-import exceptions.UniqueRestrictionException;
-import lombok.extern.slf4j.Slf4j;
+import exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.PersonService;
@@ -24,7 +20,6 @@ import service.PersonService;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class PersonServiceImpl implements PersonService {
 
@@ -65,14 +60,11 @@ public class PersonServiceImpl implements PersonService {
 
         if (personDto == null) {
             String exMessage = "'personDto' is unavailable";
-            log.error(exMessage);
             throw new UnavailableObjectException(exMessage);
         }
-        if (!isLoginUnique(personDto.getLogin())) {
-            String exMessage = Person.class.getSimpleName() + " with login:" + personDto.getLogin() +
-                    " already exist";
-            log.error(exMessage);
-            throw new UniqueRestrictionException(exMessage);
+        if (isLoginNotUnique(personDto.getLogin())) {
+            throw new UniqueRestrictionException(Person.class.getSimpleName() + " with login:" + personDto.getLogin() +
+                    " already exist");
         }
         Person newPerson = createUpdatePersonConverter.fromDto(personDto);
         Role clientRole = roleDao.findById(CLIENT_ROLE_ID);
@@ -84,14 +76,10 @@ public class PersonServiceImpl implements PersonService {
     public void deleteById(Long id) throws RowNotFoundException, ReferenceRestrictionException {
         Person existPerson = personDao.findById(id);
         Set<Record> existRecords = recordDao.findAll();
-        boolean isAnyRecordHasPerson = existRecords.stream()
-                .anyMatch(r -> r.getClient().getId().equals(id) || r.getWorker().getId().equals(id));
 
-        if (isAnyRecordHasPerson) {
-            String exMessage = "Cannot delete " + Person.class.getSimpleName() + " with id: " + id + " because" +
-                    " some " + Record.class.getSimpleName() + "(s) references to this " + Person.class.getSimpleName();
-            System.out.println("Log: " + exMessage);
-            throw new ReferenceRestrictionException(exMessage);
+        if (isAnyRecordHasPerson(existRecords, id)) {
+            throw new ReferenceRestrictionException("Some of " + Record.class.getSimpleName() + " references to "
+                    + Person.class.getSimpleName() + " with id:" + id);
         }
         personDao.delete(existPerson);
     }
@@ -102,22 +90,53 @@ public class PersonServiceImpl implements PersonService {
         //check is person exist and then
         //set roles to person because this method update only non reference fields
         personToUpdate.setRoles(personDao.findById(personDto.getId()).getRoles());
-        //check if login value is unique
-        Set<Person> existPeople = personDao.findAll();
-        boolean isLoginNotUnique = existPeople.stream()
-                .anyMatch(p -> p.getLogin().equals(personToUpdate.getLogin()));
-        if (isLoginNotUnique) {
-            String exMessage = Person.class.getSimpleName() + " with id:" + personToUpdate.getId() +
-                    " restrict the unique key constraint on the field 'login'";
-            System.out.println("Log: " + exMessage);
-            throw new UniqueRestrictionException(exMessage);
+
+        if (isLoginNotUnique(personToUpdate.getLogin())) {
+            throw new UniqueRestrictionException(Person.class.getSimpleName() + " with login:" + personDto.getLogin() +
+                    " already exist");
         }
         personDao.update(personToUpdate);
     }
 
-    private boolean isLoginUnique(String login) {
+    @Override
+    public void setRole(Long personId, Long roleId) throws RowNotFoundException, UnableToUpdateException {
+        Person personToUpdate = personDao.findById(personId);
+        Role existRole = roleDao.findById(roleId);
+
+        if (isPersonHasRole(personToUpdate, existRole)) {
+            throw new UnableToUpdateException(Role.class.getSimpleName() + " with id:" + roleId + " already exist");
+        }
+        else {
+            personDao.update(personToUpdate);
+        }
+    }
+
+    @Override
+    public void removeRole(Long personId, Long roleId) throws UnableToUpdateException, RowNotFoundException {
+        Person personToUpdate = personDao.findById(personId);
+
+        if (personToUpdate.getRoles().removeIf(r -> roleId.equals(r.getId()))) {
+            personDao.update(personToUpdate);
+        }
+        else {
+            throw new UnableToUpdateException(Person.class.getSimpleName() + " with id:" + personId
+                    + " hasn't role with id:" + roleId);
+        }
+    }
+
+    private boolean isLoginNotUnique(String login) {
         Set<Person> people = personDao.findAll();
         return people.stream()
-                .noneMatch(p -> login.equals(p.getLogin()));
+                .anyMatch(p -> login.equals(p.getLogin()));
+    }
+
+    private boolean isAnyRecordHasPerson(Set<Record> records, Long id) {
+        return records.stream()
+                .anyMatch(r -> r.getClient().getId().equals(id) || r.getWorker().getId().equals(id));
+    }
+
+    private boolean isPersonHasRole(Person person, Role role) {
+        return person.getRoles().stream()
+                .anyMatch(r -> role.getId().equals(r.getId()));
     }
 }

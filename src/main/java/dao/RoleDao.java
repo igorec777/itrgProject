@@ -12,7 +12,5 @@ public interface RoleDao {
 
     Set<Role> findAll();
 
-    void update(Role role);
-
     void delete(Role role);
 }

@@ -22,14 +22,12 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleDao roleDao;
-    private final PersonDao personDao;
     private final RoleConverter roleConverter;
 
 
     @Autowired
-    RoleServiceImpl(RoleDao roleDao, PersonDao personDao, RoleConverterImpl roleConverter) {
+    RoleServiceImpl(RoleDao roleDao, RoleConverterImpl roleConverter) {
         this.roleDao = roleDao;
-        this.personDao = personDao;
         this.roleConverter = roleConverter;
     }
 
@@ -49,66 +47,30 @@ public class RoleServiceImpl implements RoleService {
     public RoleDto create(RoleDto roleDto) throws RowNotFoundException, UnavailableObjectException,
             UniqueRestrictionException {
         if (roleDto == null) {
-            String exMessage = "'roleDto' is unavailable";
-            System.out.println("Log: " + exMessage);
-            throw new UnavailableObjectException(exMessage);
+            throw new UnavailableObjectException("'roleDto' is unavailable");
         }
-        if (!isNameUnique(roleDto.getName())) {
-            String exMessage = Role.class.getSimpleName() + " with name:" + roleDto.getName() +
-                    " already exist";
-            System.out.println("Log: " + exMessage);
-            throw new UniqueRestrictionException(exMessage);
+        if (isNameNotUnique(roleDto.getName())) {
+            throw new UniqueRestrictionException(Role.class.getSimpleName() + " with name:" + roleDto.getName() +
+                    " already exist");
         }
         Role newRole = roleConverter.fromDto(roleDto);
         return roleConverter.toDto(roleDao.create(newRole));
     }
 
     @Override
-    public void update(RoleDto roleDto) throws RowNotFoundException, UniqueRestrictionException {
-        //check is role exist and then
-        //set people to role because this method update only non reference fields
-        Role roleToUpdate = roleConverter.fromDto(roleDto);
-        roleToUpdate.setPeople(roleDao.findById(roleDto.getId()).getPeople());
-        //check if name value is unique
-        Set<Role> existRoles = roleDao.findAll();
-        boolean isNameNotUnique = existRoles.stream()
-                .anyMatch(p -> p.getName().equals(roleToUpdate.getName()));
-        if (isNameNotUnique) {
-            String exMessage = Role.class.getSimpleName() + " with id:" + roleToUpdate.getId() +
-                    " restrict the unique key constraint on the field 'name'";
-            System.out.println("Log: " + exMessage);
-            throw new UniqueRestrictionException(exMessage);
-        }
-        roleDao.update(roleToUpdate);
-    }
-
-    @Override
     public void deleteById(Long id) throws RowNotFoundException, ReferenceRestrictionException {
         Role existRole = roleDao.findById(id);
-        Set<Person> existPeople = personDao.findAll();
-        if (isAnyPersonHasRole(existPeople, id)) {
-            String exMessage = "Cannot delete " + Role.class.getSimpleName() + " with id: " + id + " because" +
-                    " some " + Person.class.getSimpleName() + "(s) references to this " + Role.class.getSimpleName();
-            System.out.println("Log: " + exMessage);
-            throw new ReferenceRestrictionException(exMessage);
+        //check if some person has this role
+        if (!existRole.getPeople().isEmpty()) {
+            throw new ReferenceRestrictionException("Some " + Person.class.getSimpleName() + " references to "
+            + Role.class.getSimpleName() + " with id:" + id);
         }
         roleDao.delete(existRole);
     }
 
-    private boolean isAnyPersonHasRole(Set<Person> people, Long id) {
-        for (Person p : people) {
-            for (Role r : p.getRoles()) {
-                if (id.equals(r.getId())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isNameUnique(String name) {
+    private boolean isNameNotUnique(String name) {
         Set<Role> roles = roleDao.findAll();
         return roles.stream()
-                .noneMatch(r -> name.equals(r.getName()));
+                .anyMatch(r -> name.equals(r.getName()));
     }
 }

@@ -1,10 +1,7 @@
 package entity;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -19,7 +16,7 @@ public class Role extends BaseEntity<Long> {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany()
     @JoinTable(
             name = "person_has_role",
             joinColumns = @JoinColumn(name = "roleId"),

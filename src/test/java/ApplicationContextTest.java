@@ -1,3 +1,4 @@
+import aspect.AspectLogging;
 import beansConfig.BaseConfig;
 import connectorService.FlywayService;
 import converter.person.impl.CreateUpdatePersonConverterImpl;
@@ -61,9 +62,14 @@ public class ApplicationContextTest {
                 CreateUpdateRecordConverterImpl.class);
     }
 
+    @Test
+    void givenImportedAspectBeans_whenGettingEach_shallFindIt() {
+        assertThatBeanExists(uncapitalize(AspectLogging.class.getSimpleName()), AspectLogging.class);
+    }
+
     private void assertThatBeanExists(String beanName, Class<?> beanClass) {
         assertTrue(context.containsBean(beanName));
-        assertNotNull(context.getBean(beanClass));
+        assertNotNull(context.getBean(beanName));
     }
 
     private String uncapitalize(String str) {

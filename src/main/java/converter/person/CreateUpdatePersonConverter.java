@@ -1,7 +1,6 @@
 package converter.person;
 
 import dto.person.CreateUpdatePersonDto;
-import dto.person.ReadPersonDto;
 import entity.Person;
 
 public interface CreateUpdatePersonConverter {

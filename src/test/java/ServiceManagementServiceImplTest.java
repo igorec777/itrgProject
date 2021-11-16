@@ -37,8 +37,6 @@ public class ServiceManagementServiceImplTest extends BaseServiceTest {
         assertEquals(SERVICES_COUNT + 1, createdService.getId());
         assertEquals(newService.getName(), createdService.getName());
         assertEquals(newService.getPrice(), createdService.getPrice());
-
-        System.out.println(createdService);
     }
 
 
@@ -50,7 +48,6 @@ public class ServiceManagementServiceImplTest extends BaseServiceTest {
         assertNotNull(services);
         assertEquals(SERVICES_COUNT, services.size());
         assertTrue(services.stream().allMatch(r -> existServices.contains(r.getName())));
-        System.out.println(services);
     }
 
     @Test
@@ -61,7 +58,6 @@ public class ServiceManagementServiceImplTest extends BaseServiceTest {
             assertEquals(i, existService.getId());
             assertNotNull(existService.getName());
             assertNotNull(existService.getPrice());
-            System.out.println(existService);
         }
     }
 
@@ -72,35 +68,34 @@ public class ServiceManagementServiceImplTest extends BaseServiceTest {
         assertThrows(RowNotFoundException.class, () -> serviceManagementService.findById(0L));
     }
 
-//    @Test
-//    void deleteById_validData_shouldPass() throws RowNotFoundException, ReferenceRestrictionException {
-//        ServiceDto serviceDto = ServiceDto.builder()
-//                .id(1L)
-//                .build();
-//        serviceManagementService.deleteById(serviceDto.getId());
-//        System.out.println("Deleted: " + serviceDto);
-//    }
-//
-//    @Test
-//    void deleteById_wrongData_shouldThrowException() {
-//        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
-//                .id(0L)
-//                .build().getId()));
-//        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
-//                .id(-45L)
-//                .build().getId()));
-//        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
-//                .id(95844L)
-//                .build().getId()));
-//    }
-//
-//    @Test
-//    void deleteById_noSuitableData_shouldThrowException() {
-//        assertThrows(ReferenceRestrictionException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
-//                .id(2L)
-//                .build().getId()));
-//        assertThrows(ReferenceRestrictionException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
-//                .id(3L)
-//                .build().getId()));
-//    }
+    @Test
+    void deleteById_validData_shouldPass() throws RowNotFoundException, ReferenceRestrictionException {
+        ServiceDto serviceDto = ServiceDto.builder()
+                .id(1L)
+                .build();
+        serviceManagementService.deleteById(serviceDto.getId());
+    }
+
+    @Test
+    void deleteById_wrongData_shouldThrowException() {
+        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(0L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(-45L)
+                .build().getId()));
+        assertThrows(RowNotFoundException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(95844L)
+                .build().getId()));
+    }
+
+    @Test
+    void deleteById_noSuitableData_shouldThrowException() {
+        assertThrows(ReferenceRestrictionException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(2L)
+                .build().getId()));
+        assertThrows(ReferenceRestrictionException.class, () -> serviceManagementService.deleteById(ReadPersonDto.builder()
+                .id(3L)
+                .build().getId()));
+    }
 }

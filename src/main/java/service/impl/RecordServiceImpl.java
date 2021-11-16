@@ -56,9 +56,7 @@ public class RecordServiceImpl implements RecordService {
             UnavailableObjectException, RecordOccupiedTimeException {
 
         if (recordDto == null) {
-            String exMessage = "'recordDto' is unavailable";
-            System.out.println("Log: " + exMessage);
-            throw new UnavailableObjectException(exMessage);
+            throw new UnavailableObjectException("'recordDto' is unavailable");
         }
         Record newRecord = createUpdateConverter.fromDto(recordDto);
         //also check if client, worker and service exist
@@ -68,10 +66,8 @@ public class RecordServiceImpl implements RecordService {
 
         //check if time available
         if (!isTimeFree(recordDto)) {
-            String exMessage = "Time: " + recordDto.getStartTime() + " - " + recordDto.getEndTime()
-                    + " to worker id:" + recordDto.getWorkerId() + " is occupied";
-            System.out.println("Log: " + exMessage);
-            throw new RecordOccupiedTimeException(exMessage);
+            throw new RecordOccupiedTimeException("Time: " + recordDto.getStartTime() + " - " + recordDto.getEndTime()
+                    + " to worker id:" + recordDto.getWorkerId() + " is occupied");
         }
         return readConverter.toDto(recordDao.create(newRecord));
     }

@@ -5,9 +5,7 @@ import converter.service.impl.ServiceConverterImpl;
 import dao.RecordDao;
 import dao.ServiceDao;
 import dto.service.ServiceDto;
-import entity.Person;
 import entity.Record;
-import entity.Role;
 import entity.Service;
 import exceptions.ReferenceRestrictionException;
 import exceptions.RowNotFoundException;
@@ -48,15 +46,11 @@ public class ServiceManagementServiceImpl implements ServiceManagementService {
     @Override
     public ServiceDto create(ServiceDto serviceDto) throws UnavailableObjectException, UniqueRestrictionException {
         if (serviceDto == null) {
-            String exMessage = "'serviceDto' is unavailable";
-            System.out.println("Log: " + exMessage);
-            throw new UnavailableObjectException(exMessage);
+            throw new UnavailableObjectException("'serviceDto' is unavailable");
         }
         if (!isNameUnique(serviceDto.getName())) {
-            String exMessage = Service.class.getSimpleName() + " with name:" + serviceDto.getName() +
-                    " already exist";
-            System.out.println("Log: " + exMessage);
-            throw new UniqueRestrictionException(exMessage);
+            throw new UniqueRestrictionException(Service.class.getSimpleName() + " with name:" + serviceDto.getName() +
+                    " already exist");
         }
         Service newService = serviceConverter.fromDto(serviceDto);
         return serviceConverter.toDto(serviceDao.create(newService));
@@ -65,15 +59,10 @@ public class ServiceManagementServiceImpl implements ServiceManagementService {
     @Override
     public void deleteById(Long id) throws RowNotFoundException, ReferenceRestrictionException {
         Service existService = serviceDao.findById(id);
-        Set<Record> existRecords = recordDao.findAll();
-        boolean isAnyRecordHasService = existRecords.stream()
-                .anyMatch(r -> r.getService().getId().equals(id));
 
-        if (isAnyRecordHasService) {
-            String exMessage = "Cannot delete " + Service.class.getSimpleName() + " with id: " + id + " because" +
-                    " some " + Record.class.getSimpleName() + "(s) references to this " + Service.class.getSimpleName();
-            System.out.println("Log: " + exMessage);
-            throw new ReferenceRestrictionException(exMessage);
+        if (isAnyRecordHasService(existService)) {
+            throw new ReferenceRestrictionException("Some " + Record.class.getSimpleName()
+                    + " references to " + Service.class.getSimpleName() + " with id:" + id);
         }
         serviceDao.delete(existService);
     }
@@ -82,5 +71,11 @@ public class ServiceManagementServiceImpl implements ServiceManagementService {
         Set<Service> services = serviceDao.findAll();
         return services.stream()
                 .noneMatch(s -> name.equals(s.getName()));
+    }
+
+    private boolean isAnyRecordHasService(Service service) {
+        Set<Record> existRecords = recordDao.findAll();
+        return existRecords.stream()
+                .anyMatch(r -> service.getId().equals(r.getService().getId()));
     }
 }
