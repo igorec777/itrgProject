@@ -1,15 +1,18 @@
 package beansConfig;
 
 import connectorService.HibernateUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
-import org.slf4j.helpers.NOPLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
+import javax.annotation.PostConstruct;
+
 
 @EnableAspectJAutoProxy
-@PropertySource(value = "classpath:application.properties")
+@PropertySource(value = "classpath:properties/application.properties")
 @ComponentScans({@ComponentScan({"connectorService"}),
         @ComponentScan({"dao", "dao.impl"}),
         @ComponentScan({"service", "service.impl"}),
@@ -17,6 +20,19 @@ import org.springframework.context.annotation.*;
         @ComponentScan({"aspect"})})
 @Configuration
 public class BaseConfig {
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
+    
+    @PostConstruct
+    void initLogLevel() {
+        if (activeProfile.equals("dev")) {
+            Configurator.setRootLevel(Level.valueOf("WARN"));
+        }
+        else if (activeProfile.equals("prod")) {
+            Configurator.setRootLevel(Level.valueOf("ERROR"));
+        }
+    }
 
     @Bean
     Flyway flyway(@Value("${db.url}") String url,

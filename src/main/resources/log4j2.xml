@@ -9,8 +9,10 @@
         <Logger name="service.impl" level="trace">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Root level="warn">
+        <Root level="error">
             <AppenderRef ref="Console"/>
         </Root>
+
     </Loggers>
+
 </Configuration>

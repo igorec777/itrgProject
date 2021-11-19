@@ -3,10 +3,9 @@ package aspect;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import org.slf4j.Marker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
@@ -16,23 +15,35 @@ import org.springframework.stereotype.Component;
 @Configurable
 public class AspectLogging {
 
+    //@Autowired
+    //private Marker marker;
 
     //Pointcuts for services:
 
-    //log result for find* methods
-    @Pointcut("execution(public * service.impl.*.find*(..))")
-    void logFindMethodsSuccessResult() {
+    //log result
+    @Pointcut("execution(!void service.impl..*(..))")
+    void logMethodsSuccessResult() {
     }
 
-    //log ecxeptions for all methods
+    //log execution
+    @Pointcut("execution(void service.impl..*(..))")
+    void logMethodsSuccessExecution() {
+    }
+
+    //log exceptions
     @Pointcut("execution(* service.impl..*(..))")
     void logMethodsExceptions() {
     }
 
-    @AfterReturning(value = "logFindMethodsSuccessResult()", returning = "retVal")
-    void logResult(JoinPoint joinPoint, Object retVal) {
-        log.warn("Method: " + joinPoint.getSignature().getName() + parseArgsToStr(joinPoint.getArgs())
-                + " | Returns: " + retVal);
+    @After("logMethodsSuccessExecution()")
+    void logSuccessExecution(JoinPoint joinPoint) {
+        log.warn("Executed Method: " + joinPoint.getSignature().getName() + parseArgsToStr(joinPoint.getArgs()));
+    }
+
+    @AfterReturning(value = "logMethodsSuccessResult()", returning = "retValue")
+    void logResult(JoinPoint joinPoint, Object retValue) {
+        log.warn("Executed Method: " + joinPoint.getSignature().getName() + parseArgsToStr(joinPoint.getArgs()) +
+                " | Returns: " + retValue);
     }
 
     @Around("logMethodsExceptions()")
@@ -42,7 +53,6 @@ public class AspectLogging {
         } catch (Throwable ex) {
             log.error("Method: " + joinPoint.getSignature().getName() + parseArgsToStr(joinPoint.getArgs()) +
                     " | Message: " + ex.getMessage());
-            //ex.printStackTrace();
             throw ex;
         }
     }
