@@ -1,9 +1,9 @@
-import dto.person.CreateUpdatePersonDto;
-import dto.person.ReadPersonDto;
-import exceptions.*;
+import app.dto.person.CreateUpdatePersonDto;
+import app.dto.person.ReadPersonDto;
+import app.exception.*;
+import app.service.PersonService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.PersonService;
 
 import java.util.Set;
 

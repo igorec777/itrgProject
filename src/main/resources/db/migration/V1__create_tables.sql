@@ -1,3 +1,5 @@
+--person
+
 create table person
 (
     id       bigint auto_increment,
@@ -6,9 +8,6 @@ create table person
     login    char not null,
     password char not null
 );
-
-create unique index USER_ID_UINDEX
-    on person (id);
 
 create unique index USER_LOGIN_UINDEX
     on person (login);
@@ -23,11 +22,10 @@ create table role
     name char not null
 );
 
-create unique index ROLE_ID_UINDEX
-    on role (id);
-
 create unique index ROLE_NAME_UINDEX
     on role (name);
+
+--role
 
 alter table role
     add constraint ROLE_PK
@@ -35,20 +33,22 @@ alter table role
 
 create table person_has_role
 (
-    personId bigint not null,
-    roleId   bigint not null
+    person_id bigint not null,
+    role_id   bigint not null
 
 );
 
 alter table person_has_role
     add constraint PERSON_HAS_ROLE_PK
-        primary key (personId, roleId);
+        primary key (person_id, role_id);
 
 alter table person_has_role
-    add foreign key (personId) references person (id);
+    add foreign key (person_id) references person (id);
 
 alter table person_has_role
-    add foreign key (roleId) references role (id);
+    add foreign key (role_id) references role (id);
+
+--service
 
 create table service
 (
@@ -67,14 +67,16 @@ alter table service
     add constraint SERVICE_PK
         primary key (Id);
 
+--record
+
 create table record
 (
     id        bigint auto_increment,
-    startTime timestamp not null,
-    endTime   timestamp not null,
-    clientId  bigint  not null,
-    workerId  bigint  not null,
-    serviceId bigint  not null
+    start_time timestamp not null,
+    end_time   timestamp not null,
+    client_id  bigint  not null,
+    worker_id  bigint  not null,
+    service_id bigint  not null
 );
 
 create unique index RECORD_ID_UINDEX
@@ -85,12 +87,12 @@ alter table record
         primary key (id);
 
 alter table record
-    add foreign key (clientId) references person (id);
+    add foreign key (client_id) references person (id);
 
 alter table record
-    add foreign key (workerId) references person (id);
+    add foreign key (worker_id) references person (id);
 
 alter table record
-    add foreign key (serviceId) references service (id);
+    add foreign key (service_id) references service (id);
 
 COMMIT;

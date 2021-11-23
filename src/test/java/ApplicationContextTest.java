@@ -1,13 +1,15 @@
-import aspect.AspectLogging;
-import beansConfig.BaseConfig;
-import connectorService.FlywayService;
-import converter.person.impl.CreateUpdatePersonConverterImpl;
-import converter.person.impl.ReadPersonConverterImpl;
-import converter.record.impl.CreateUpdateRecordConverterImpl;
-import converter.record.impl.ReadRecordConverterImpl;
-import converter.role.impl.RoleConverterImpl;
-import connectorService.SessionUtil;
-import converter.service.impl.ServiceConverterImpl;
+import app.Application;
+import app.connectorService.SessionUtil;
+import app.converter.person.impl.CreateUpdatePersonConverterImpl;
+import app.converter.person.impl.ReadPersonConverterImpl;
+import app.converter.record.impl.CreateUpdateRecordConverterImpl;
+import app.converter.record.impl.ReadRecordConverterImpl;
+import app.converter.role.impl.RoleConverterImpl;
+import app.converter.service.impl.ServiceConverterImpl;
+import app.service.impl.PersonServiceImpl;
+import app.service.impl.RecordServiceImpl;
+import app.service.impl.RoleServiceImpl;
+import app.service.impl.ServiceManagementServiceImpl;
 import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
@@ -16,16 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import service.impl.PersonServiceImpl;
-import service.impl.RecordServiceImpl;
-import service.impl.RoleServiceImpl;
-import service.impl.ServiceManagementServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = BaseConfig.class)
+@ContextConfiguration(classes = Application.class)
 public class ApplicationContextTest {
     @Autowired
     private ApplicationContext context;
@@ -40,8 +38,6 @@ public class ApplicationContextTest {
 
     @Test
     void givenImportedConnectorBeans_whenGettingEach_shallFindIt() {
-        assertThatBeanExists(uncapitalize(BaseConfig.class.getSimpleName()), BaseConfig.class);
-        assertThatBeanExists(uncapitalize(FlywayService.class.getSimpleName()), FlywayService.class);
         assertThatBeanExists(uncapitalize(Flyway.class.getSimpleName()), Flyway.class);
         assertThatBeanExists(uncapitalize(SessionFactory.class.getSimpleName()), SessionFactory.class);
         assertThatBeanExists(uncapitalize(SessionUtil.class.getSimpleName()), SessionUtil.class);
@@ -62,10 +58,10 @@ public class ApplicationContextTest {
                 CreateUpdateRecordConverterImpl.class);
     }
 
-    @Test
-    void givenImportedAspectBeans_whenGettingEach_shallFindIt() {
-        assertThatBeanExists(uncapitalize(AspectLogging.class.getSimpleName()), AspectLogging.class);
-    }
+//    @Test
+//    void givenImportedAspectBeans_whenGettingEach_shallFindIt() {
+//        assertThatBeanExists(uncapitalize(AspectLogging.class.getSimpleName()), AspectLogging.class);
+//    }
 
     private void assertThatBeanExists(String beanName, Class<?> beanClass) {
         assertTrue(context.containsBean(beanName));

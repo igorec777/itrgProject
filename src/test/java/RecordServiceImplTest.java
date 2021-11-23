@@ -1,17 +1,16 @@
-import dto.record.CreateUpdateRecordDto;
-import dto.record.ReadRecordDto;
-import exceptions.RecordOccupiedTimeException;
-import exceptions.RowNotFoundException;
-import exceptions.UnavailableObjectException;
+import app.dto.record.CreateUpdateRecordDto;
+import app.dto.record.ReadRecordDto;
+import app.exception.RecordOccupiedTimeException;
+import app.exception.RowNotFoundException;
+import app.exception.UnavailableObjectException;
+import app.service.RecordService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.RecordService;
 
 import java.sql.Timestamp;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utils.TestUtils.isAllClassFieldsNotNullOfGivenObject;
 
 public class RecordServiceImplTest extends BaseServiceTest {
@@ -59,7 +58,7 @@ public class RecordServiceImplTest extends BaseServiceTest {
                 .startTime(Timestamp.valueOf("2021-10-14 17:30:00"))
                 .endTime(Timestamp.valueOf("2021-10-14 18:15:00"))
                 .clientId(2L)
-                //worker 3 has no records
+                //worker 3 has no records (not busy)
                 .workerId(3L)
                 .serviceId(1L)
                 .build();
@@ -86,16 +85,49 @@ public class RecordServiceImplTest extends BaseServiceTest {
 
     @Test
     void create_noSuitableTime_shouldThrowException() {
-        CreateUpdateRecordDto newRecord = CreateUpdateRecordDto.builder()
+        CreateUpdateRecordDto newRecord1 = CreateUpdateRecordDto.builder()
                 //worker id:2 is busy at this time
-                .startTime(Timestamp.valueOf("2021-09-25 12:30:00"))
-                .endTime(Timestamp.valueOf("2021-09-25 13:00:00"))
+                .startTime(Timestamp.valueOf("2021-09-25 11:10:00"))
+                .endTime(Timestamp.valueOf("2021-09-25 12:00:00"))
                 .clientId(1L)
                 .workerId(2L)
                 .serviceId(3L)
                 .build();
 
-        assertThrows(RecordOccupiedTimeException.class, () -> recordService.create(newRecord));
+        assertThrows(RecordOccupiedTimeException.class, () -> recordService.create(newRecord1));
+
+        CreateUpdateRecordDto newRecord2 = CreateUpdateRecordDto.builder()
+                //worker id:2 is busy at this time
+                .startTime(Timestamp.valueOf("2021-09-25 11:10:00"))
+                .endTime(Timestamp.valueOf("2021-09-25 16:00:00"))
+                .clientId(1L)
+                .workerId(2L)
+                .serviceId(3L)
+                .build();
+
+        assertThrows(RecordOccupiedTimeException.class, () -> recordService.create(newRecord2));
+
+        CreateUpdateRecordDto newRecord3 = CreateUpdateRecordDto.builder()
+                //worker id:2 is busy at this time
+                .startTime(Timestamp.valueOf("2021-09-25 12:10:00"))
+                .endTime(Timestamp.valueOf("2021-09-25 12:20:00"))
+                .clientId(1L)
+                .workerId(2L)
+                .serviceId(3L)
+                .build();
+
+        assertThrows(RecordOccupiedTimeException.class, () -> recordService.create(newRecord3));
+
+        CreateUpdateRecordDto newRecord4 = CreateUpdateRecordDto.builder()
+                //worker id:2 is busy at this time
+                .startTime(Timestamp.valueOf("2021-09-25 12:10:00"))
+                .endTime(Timestamp.valueOf("2021-09-25 17:00:00"))
+                .clientId(1L)
+                .workerId(2L)
+                .serviceId(3L)
+                .build();
+
+        assertThrows(RecordOccupiedTimeException.class, () -> recordService.create(newRecord4));
     }
 
     @Test

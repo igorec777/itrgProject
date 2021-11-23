@@ -1,11 +1,11 @@
-import dto.role.RoleDto;
-import exceptions.ReferenceRestrictionException;
-import exceptions.RowNotFoundException;
-import exceptions.UnavailableObjectException;
-import exceptions.UniqueRestrictionException;
+import app.dto.role.RoleDto;
+import app.exception.ReferenceRestrictionException;
+import app.exception.RowNotFoundException;
+import app.exception.UnavailableObjectException;
+import app.exception.UniqueRestrictionException;
+import app.service.RoleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.RoleService;
 
 import java.util.List;
 import java.util.Set;

@@ -1,18 +1,17 @@
-import dto.person.ReadPersonDto;
-import dto.service.ServiceDto;
-import exceptions.ReferenceRestrictionException;
-import exceptions.RowNotFoundException;
-import exceptions.UnavailableObjectException;
-import exceptions.UniqueRestrictionException;
+import app.dto.person.ReadPersonDto;
+import app.dto.service.ServiceDto;
+import app.exception.ReferenceRestrictionException;
+import app.exception.RowNotFoundException;
+import app.exception.UnavailableObjectException;
+import app.exception.UniqueRestrictionException;
+import app.service.ServiceManagementService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.ServiceManagementService;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ServiceManagementServiceImplTest extends BaseServiceTest {
 
