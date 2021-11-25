@@ -1,9 +1,6 @@
 package app.service.impl;
 
-import app.converter.record.CreateUpdateRecordConverter;
-import app.converter.record.ReadRecordConverter;
-import app.converter.record.impl.CreateUpdateRecordConverterImpl;
-import app.converter.record.impl.ReadRecordConverterImpl;
+import app.converter.record.RecordConverter;
 import app.dao.PersonDao;
 import app.dao.RecordDao;
 import app.dao.ServiceDao;
@@ -25,29 +22,27 @@ public class RecordServiceImpl implements RecordService {
     private final RecordDao recordDao;
     private final PersonDao personDao;
     private final ServiceDao serviceDao;
-    private final ReadRecordConverter readConverter;
-    private final CreateUpdateRecordConverter createUpdateConverter;
+    private final RecordConverter recordConverter;
 
 
     @Autowired
     RecordServiceImpl(RecordDao recordDao, PersonDao personDao, ServiceDao serviceDao,
-                      ReadRecordConverterImpl readRecordConverter, CreateUpdateRecordConverterImpl createUpdateConverter) {
+                      RecordConverter recordConverter) {
         this.recordDao = recordDao;
         this.personDao = personDao;
         this.serviceDao = serviceDao;
-        this.readConverter = readRecordConverter;
-        this.createUpdateConverter = createUpdateConverter;
+        this.recordConverter = recordConverter;
     }
 
     @Override
     public ReadRecordDto findById(Long id) throws RowNotFoundException {
-        return readConverter.toDto(recordDao.findById(id));
+        return recordConverter.toReadRecordDto(recordDao.findById(id));
     }
 
     @Override
     public Set<ReadRecordDto> findAll() {
         return recordDao.findAll().stream()
-                .map(readConverter::toDto)
+                .map(recordConverter::toReadRecordDto)
                 .collect(Collectors.toSet());
     }
 
@@ -58,7 +53,7 @@ public class RecordServiceImpl implements RecordService {
         if (recordDto == null) {
             throw new UnavailableObjectException("'recordDto' is unavailable");
         }
-        Record newRecord = createUpdateConverter.fromDto(recordDto);
+        Record newRecord = recordConverter.fromReadRecordDto(recordDto);
         //also check if client, worker and app.service exist
         newRecord.setClient(personDao.findById(recordDto.getClientId()));
         newRecord.setWorker(personDao.findById(recordDto.getWorkerId()));
@@ -69,7 +64,7 @@ public class RecordServiceImpl implements RecordService {
             throw new RecordOccupiedTimeException("Time: " + recordDto.getStartTime() + " - " + recordDto.getEndTime()
                     + " to worker id:" + recordDto.getWorkerId() + " is occupied");
         }
-        return readConverter.toDto(recordDao.create(newRecord));
+        return recordConverter.toReadRecordDto(recordDao.create(newRecord));
     }
 
     @Override

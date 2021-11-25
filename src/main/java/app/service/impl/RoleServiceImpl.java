@@ -1,7 +1,7 @@
 package app.service.impl;
 
 import app.converter.role.RoleConverter;
-import app.converter.role.impl.RoleConverterImpl;
+import app.converter.role.RoleConverterImpl;
 import app.dao.RoleDao;
 import app.dto.role.RoleDto;
 import app.entity.Person;
@@ -32,13 +32,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto findById(Long id) throws RowNotFoundException {
-        return roleConverter.toDto(roleDao.findById(id));
+        return roleConverter.toRoleDto(roleDao.findById(id));
     }
 
     @Override
     public Set<RoleDto> findAll() {
         return roleDao.findAll().stream()
-                .map(roleConverter::toDto)
+                .map(roleConverter::toRoleDto)
                 .collect(Collectors.toSet());
     }
 
@@ -52,8 +52,8 @@ public class RoleServiceImpl implements RoleService {
             throw new UniqueRestrictionException(Role.class.getSimpleName() + " with name:" + roleDto.getName() +
                     " already exist");
         }
-        Role newRole = roleConverter.fromDto(roleDto);
-        return roleConverter.toDto(roleDao.create(newRole));
+        Role newRole = roleConverter.fromRoleDto(roleDto);
+        return roleConverter.toRoleDto(roleDao.create(newRole));
     }
 
     @Override

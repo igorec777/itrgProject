@@ -1,0 +1,868 @@
+{
+	"info": {
+		"_postman_id": "402ae3e7-c5c7-4ed7-993f-8211920f71d3",
+		"name": "API requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "person",
+			"item": [
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n   {\r\n        \"name\": \"Name\",\r\n        \"surname\": \"Surname\",\r\n        \"login\": \"LoginNew\",\r\n        \"password\": \"1234\"\r\n    }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/people/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Name\",\r\n    \"surname\": \"Surname\",\r\n    \"login\": \"Login1\",\r\n    \"password\": \"1234\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/people/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/get/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"get",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/get/-295",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"get",
+										"-295"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findAll",
+					"item": [
+						{
+							"name": "valid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "update",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "  {\r\n        \"id\": 1,\r\n        \"name\": \"NameX\",\r\n        \"surname\": \"SurnameX\",\r\n        \"login\": \"LoginX\",\r\n        \"password\": \"1234X\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/people/update",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "  {\r\n        \"id\": 1,\r\n        \"name\": \"NameX\",\r\n        \"surname\": \"SurnameX\",\r\n        \"login\": \"Login3\",\r\n        \"password\": \"1234X\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/people/update",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"update"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "deleteById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/delete/3",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"delete",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/delete/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"delete",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "setRole",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/setRole?personId=1&roleId=3",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"setRole"
+									],
+									"query": [
+										{
+											"key": "personId",
+											"value": "1"
+										},
+										{
+											"key": "roleId",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/setRole?personId=1&roleId=1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"setRole"
+									],
+									"query": [
+										{
+											"key": "personId",
+											"value": "1"
+										},
+										{
+											"key": "roleId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "removeRole",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/removeRole?personId=1&roleId=2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"removeRole"
+									],
+									"query": [
+										{
+											"key": "personId",
+											"value": "1"
+										},
+										{
+											"key": "roleId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/removeRole?personId=1&roleId=4",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"removeRole"
+									],
+									"query": [
+										{
+											"key": "personId",
+											"value": "1"
+										},
+										{
+											"key": "roleId",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "role",
+			"item": [
+				{
+					"name": "findAll",
+					"item": [
+						{
+							"name": "valid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/roles/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/roles/get/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"get",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/roles/get/-421",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"get",
+										"-421"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"newRole\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/roles/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Client\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/roles/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "deleteById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/roles/delete/4",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"delete",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/roles/delete/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"roles",
+										"delete",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "record",
+			"item": [
+				{
+					"name": "findAll",
+					"item": [
+						{
+							"name": "valid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/records/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"records",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/records/get/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"records",
+										"get",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/records/get/-548",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"records",
+										"get",
+										"-548"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"startTime\": \"2021-09-25T15:30:00.000+00:00\",\r\n    \"endTime\": \"2021-09-25T16:10:00.000+00:00\",\r\n    \"clientId\": 1,\r\n    \"workerId\": 2,\r\n    \"serviceId\": 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/records/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"records",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "deleteById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/records/delete/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"records",
+										"delete",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "service",
+			"item": [
+				{
+					"name": "findAll",
+					"item": [
+						{
+							"name": "valid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/services/all",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"services",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "findById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/services/get/3",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"services",
+										"get",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/services/get/-896",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"services",
+										"get",
+										"-896"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"newService\",\r\n    \"price\": 50.3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/services/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"services",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Peeling\",\r\n    \"price\": 14.66\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080/services/add",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"services",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "deleteById",
+					"item": [
+						{
+							"name": "valid_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/services/delete/1",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"services",
+										"delete",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "wrong_data",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080/people/delete/2",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"people",
+										"delete",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

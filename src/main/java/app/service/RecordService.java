@@ -17,7 +17,5 @@ public interface RecordService {
     ReadRecordDto create(CreateUpdateRecordDto recordDto) throws RowNotFoundException,
             UnavailableObjectException, RecordOccupiedTimeException;
 
-    //todo
     void deleteById(Long id) throws RowNotFoundException;
-
 }

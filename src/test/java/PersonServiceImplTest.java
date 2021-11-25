@@ -158,7 +158,6 @@ class PersonServiceImplTest extends BaseServiceTest {
         assertThrows(UnableToUpdateException.class, () -> personService.setRole(1L, 1L));
     }
 
-    //removeRole
     @Test
     void removeRole_validData_shouldPass() throws RowNotFoundException, UnableToUpdateException {
         personService.removeRole(1L, 1L);

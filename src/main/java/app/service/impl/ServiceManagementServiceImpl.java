@@ -1,7 +1,7 @@
 package app.service.impl;
 
 import app.converter.service.ServiceConverter;
-import app.converter.service.impl.ServiceConverterImpl;
+import app.converter.service.ServiceConverterImpl;
 import app.dao.RecordDao;
 import app.dao.ServiceDao;
 import app.dto.service.ServiceDto;
@@ -33,13 +33,13 @@ public class ServiceManagementServiceImpl implements ServiceManagementService {
 
     @Override
     public ServiceDto findById(Long id) throws RowNotFoundException {
-        return serviceConverter.toDto(serviceDao.findById(id));
+        return serviceConverter.toServiceDto(serviceDao.findById(id));
     }
 
     @Override
     public Set<ServiceDto> findAll() {
         return serviceDao.findAll().stream()
-                .map(serviceConverter::toDto)
+                .map(serviceConverter::toServiceDto)
                 .collect(Collectors.toSet());
     }
 
@@ -52,8 +52,8 @@ public class ServiceManagementServiceImpl implements ServiceManagementService {
             throw new UniqueRestrictionException(Service.class.getSimpleName() + " with name:" + serviceDto.getName() +
                     " already exist");
         }
-        Service newService = serviceConverter.fromDto(serviceDto);
-        return serviceConverter.toDto(serviceDao.create(newService));
+        Service newService = serviceConverter.fromServiceDto(serviceDto);
+        return serviceConverter.toServiceDto(serviceDao.create(newService));
     }
 
     @Override

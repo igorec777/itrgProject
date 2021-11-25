@@ -1,15 +1,15 @@
-package app.converter.record.impl;
+package app.converter.record;
 
-import app.converter.record.ReadRecordConverter;
+import app.dto.record.CreateUpdateRecordDto;
 import app.dto.record.ReadRecordDto;
 import app.entity.Record;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReadRecordConverterImpl implements ReadRecordConverter {
+public class RecordConverterImpl implements RecordConverter {
 
     @Override
-    public ReadRecordDto toDto(Record entity) {
+    public ReadRecordDto toReadRecordDto(Record entity) {
         return ReadRecordDto.builder()
                 .id(entity.getId())
                 .startTime(entity.getStartTime())
@@ -17,6 +17,15 @@ public class ReadRecordConverterImpl implements ReadRecordConverter {
                 .client(entity.getClient())
                 .worker(entity.getWorker())
                 .service(entity.getService())
+                .build();
+    }
+
+    @Override
+    public Record fromReadRecordDto(CreateUpdateRecordDto dto) {
+        return Record.builder()
+                .id(dto.getId())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
                 .build();
     }
 }

@@ -1,9 +1,6 @@
 package app.service.impl;
 
-import app.converter.person.CreateUpdatePersonConverter;
-import app.converter.person.ReadPersonConverter;
-import app.converter.person.impl.CreateUpdatePersonConverterImpl;
-import app.converter.person.impl.ReadPersonConverterImpl;
+import app.converter.person.PersonConverter;
 import app.dao.PersonDao;
 import app.dao.RecordDao;
 import app.dao.RoleDao;
@@ -26,31 +23,28 @@ public class PersonServiceImpl implements PersonService {
     private final PersonDao personDao;
     private final RoleDao roleDao;
     private final RecordDao recordDao;
-    private final ReadPersonConverter readPersonConverter;
-    private final CreateUpdatePersonConverter createUpdatePersonConverter;
+    private final PersonConverter personConverter;
 
     private static final Long CLIENT_ROLE_ID = 1L;
 
     @Autowired
-    PersonServiceImpl(PersonDao personDao, RoleDao roleDao, RecordDao recordDao, ReadPersonConverterImpl readPersonConverter,
-                      CreateUpdatePersonConverterImpl createUpdatePersonConverter) {
+    PersonServiceImpl(PersonDao personDao, RoleDao roleDao, RecordDao recordDao, PersonConverter personConverter) {
 
         this.personDao = personDao;
         this.roleDao = roleDao;
         this.recordDao = recordDao;
-        this.readPersonConverter = readPersonConverter;
-        this.createUpdatePersonConverter = createUpdatePersonConverter;
+        this.personConverter = personConverter;
     }
 
     @Override
     public ReadPersonDto findById(Long id) throws RowNotFoundException {
-        return readPersonConverter.toDto(personDao.findById(id));
+        return personConverter.toReadPersonDto(personDao.findById(id));
     }
 
     @Override
     public Set<ReadPersonDto> findAll() {
         return personDao.findAll().stream()
-                .map(readPersonConverter::toDto)
+                .map(personConverter::toReadPersonDto)
                 .collect(Collectors.toSet());
     }
 
@@ -66,10 +60,10 @@ public class PersonServiceImpl implements PersonService {
             throw new UniqueRestrictionException(Person.class.getSimpleName() + " with login:" + personDto.getLogin() +
                     " already exist");
         }
-        Person newPerson = createUpdatePersonConverter.fromDto(personDto);
+        Person newPerson = personConverter.fromCreateUpdatePersonDto(personDto);
         Role clientRole = roleDao.findById(CLIENT_ROLE_ID);
         newPerson.getRoles().add(clientRole);
-        return readPersonConverter.toDto(personDao.create(newPerson));
+        return personConverter.toReadPersonDto(personDao.create(newPerson));
     }
 
     @Override
@@ -86,7 +80,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void update(CreateUpdatePersonDto personDto) throws RowNotFoundException, UniqueRestrictionException {
-        Person personToUpdate = createUpdatePersonConverter.fromDto(personDto);
+        Person personToUpdate = personConverter.fromCreateUpdatePersonDto(personDto);
         //check is person exist and then
         //set roles to person because this method update only non reference fields
         personToUpdate.setRoles(personDao.findById(personDto.getId()).getRoles());
@@ -107,6 +101,7 @@ public class PersonServiceImpl implements PersonService {
             throw new UnableToUpdateException(Role.class.getSimpleName() + " with id:" + roleId + " already exist");
         }
         else {
+            personToUpdate.getRoles().add(existRole);
             personDao.update(personToUpdate);
         }
     }

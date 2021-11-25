@@ -5,11 +5,7 @@ import app.entity.Service;
 
 public interface ServiceConverter {
 
-    default ServiceDto toDto(Service entity) {
-        return null;
-    }
+    ServiceDto toServiceDto(Service entity);
 
-    default Service fromDto(ServiceDto dto) {
-        return null;
-    }
+    Service fromServiceDto(ServiceDto dto);
 }

@@ -1,6 +1,5 @@
-package app.converter.service.impl;
+package app.converter.service;
 
-import app.converter.service.ServiceConverter;
 import app.dto.service.ServiceDto;
 import app.entity.Service;
 import org.springframework.stereotype.Component;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ServiceConverterImpl implements ServiceConverter {
 
     @Override
-    public Service fromDto(ServiceDto dto) {
+    public Service fromServiceDto(ServiceDto dto) {
         return Service.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -18,7 +17,7 @@ public class ServiceConverterImpl implements ServiceConverter {
     }
 
     @Override
-    public ServiceDto toDto(Service entity) {
+    public ServiceDto toServiceDto(Service entity) {
         return ServiceDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())

@@ -5,11 +5,7 @@ import app.entity.Role;
 
 public interface RoleConverter {
 
-    default RoleDto toDto(Role entity) {
-        return null;
-    }
+    RoleDto toRoleDto(Role entity);
 
-    default Role fromDto(RoleDto dto) {
-        return null;
-    }
+    Role fromRoleDto(RoleDto dto);
 }

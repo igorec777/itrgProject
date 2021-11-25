@@ -3,13 +3,13 @@ package app.controller;
 import app.dto.person.CreateUpdatePersonDto;
 import app.dto.person.ReadPersonDto;
 import app.entity.Person;
-import app.exception.RowNotFoundException;
-import app.exception.UnavailableObjectException;
-import app.exception.UniqueRestrictionException;
+import app.exception.*;
 import app.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Set;
 
 @RestController
@@ -24,15 +24,39 @@ public class PersonController {
         return personService.findAll();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/get/{id}")
     ReadPersonDto findById(@PathVariable Long id) throws RowNotFoundException {
         return personService.findById(id);
     }
 
     @PostMapping("/add")
-    ReadPersonDto create(@RequestBody CreateUpdatePersonDto newPerson) throws RowNotFoundException,
+    ReadPersonDto create(@Valid @RequestBody CreateUpdatePersonDto person) throws RowNotFoundException,
             UniqueRestrictionException, UnavailableObjectException {
-        return personService.create(newPerson);
+        return personService.create(person);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    HttpStatus deleteById(@PathVariable Long id) throws RowNotFoundException, ReferenceRestrictionException {
+        personService.deleteById(id);
+        return HttpStatus.OK;
+    }
+
+    @PutMapping("/update")
+    HttpStatus update(@Valid @RequestBody CreateUpdatePersonDto person) throws UniqueRestrictionException, RowNotFoundException {
+        personService.update(person);
+        return HttpStatus.OK;
+    }
+
+    @PutMapping("/setRole")
+    HttpStatus setRole(@RequestParam Long personId, @RequestParam Long roleId) throws RowNotFoundException, UnableToUpdateException {
+        personService.setRole(personId, roleId);
+        return HttpStatus.OK;
+    }
+
+    @PutMapping("/removeRole")
+    HttpStatus removeRole(@RequestParam Long personId, @RequestParam Long roleId) throws RowNotFoundException, UnableToUpdateException {
+        personService.removeRole(personId, roleId);
+        return HttpStatus.OK;
     }
 
 }
